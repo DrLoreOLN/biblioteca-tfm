@@ -1,0 +1,1809 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Biblioteca TFM">
+<title>Biblioteca TFM</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232B5F4C'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' font-weight='600' fill='white' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+/* =========================================================
+   1. TOKENS
+   ========================================================= */
+:root {
+  --font-display: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-ui: "Inter", -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --bg: #F6F3EC;
+  --surface: #FDFBF7;
+  --surface-raised: #FFFFFF;
+  --surface-sunken: #EFEBE2;
+  --border: #E3DED3;
+  --border-strong: #CFC8B9;
+  --text: #1B1F24;
+  --text-muted: #5F6672;
+  --text-faint: #8B919B;
+  --accent: #2B5F4C;
+  --accent-hover: #234E3F;
+  --accent-soft: #E4EEE8;
+  --accent-contrast: #FFFFFF;
+  --danger: #B3382E;
+  --danger-soft: #F6E3E0;
+  --success: #2E7D4F;
+  --warning: #9A6B12;
+  --warning-soft: #F5EBD3;
+  --scrim: rgba(20,18,14,.45);
+  --focus: #2B5F4C;
+  --card-border-alpha: rgba(227,222,211,.7);
+  --shimmer: rgba(255,255,255,.55);
+
+  --sec-intro-ink: #9A6B12;  --sec-intro-tint: #F5EBD3;
+  --sec-marco-ink: #5B4A8F;  --sec-marco-tint: #E9E4F4;
+  --sec-metodo-ink: #1F6F80; --sec-metodo-tint: #DCEEF1;
+  --sec-result-ink: #B5573A; --sec-result-tint: #F7E4DC;
+  --sec-discus-ink: #3E5F9E; --sec-discus-tint: #E1E8F5;
+  --sec-concl-ink: #9A3E68;  --sec-concl-tint: #F4E1EA;
+  --sec-none-ink: #6B7280;   --sec-none-tint: #ECEAE3;
+
+  --sh-1: 0 1px 2px rgba(27,31,36,.06), 0 1px 1px rgba(27,31,36,.04);
+  --sh-2: 0 4px 12px rgba(27,31,36,.08), 0 1px 3px rgba(27,31,36,.06);
+  --sh-3: 0 16px 40px rgba(27,31,36,.14), 0 4px 12px rgba(27,31,36,.08);
+  --sh-thumb: 0 1px 0 rgba(0,0,0,.05), 0 6px 14px -6px rgba(27,31,36,.35);
+
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px; --r-pill: 999px;
+  --d-fast: 120ms; --d-base: 200ms; --d-slow: 320ms;
+  --ease: cubic-bezier(.2,.7,.2,1); --ease-out: cubic-bezier(0,0,.2,1);
+  --bar-h: 64px;
+}
+:root[data-theme="dark"] {
+  --bg: #14161A; --surface: #1C1F24; --surface-raised: #23272E; --surface-sunken: #191C21;
+  --border: #2F343C; --border-strong: #3F454F;
+  --text: #EDE9E0; --text-muted: #A2A8B2; --text-faint: #6F757F;
+  --accent: #7FB89E; --accent-hover: #93C7AE; --accent-soft: #22332C; --accent-contrast: #0F1A15;
+  --danger: #E0766B; --danger-soft: #3A2321; --success: #7CC49A; --warning: #D9A94A; --warning-soft: #33290F;
+  --scrim: rgba(0,0,0,.6); --focus: #7FB89E; --card-border-alpha: #2F343C; --shimmer: rgba(255,255,255,.07);
+  --sec-intro-ink: #E2B65C;  --sec-intro-tint: #33290F;
+  --sec-marco-ink: #B3A5E0;  --sec-marco-tint: #2A2540;
+  --sec-metodo-ink: #7CC3D2; --sec-metodo-tint: #173036;
+  --sec-result-ink: #E8967A; --sec-result-tint: #3A241B;
+  --sec-discus-ink: #9AB4E6; --sec-discus-tint: #1F2A40;
+  --sec-concl-ink: #E094B8;  --sec-concl-tint: #381E2B;
+  --sec-none-ink: #A2A8B2;   --sec-none-tint: #262A31;
+  --sh-1: 0 1px 2px rgba(0,0,0,.3); --sh-2: 0 4px 12px rgba(0,0,0,.35), 0 1px 3px rgba(0,0,0,.3);
+  --sh-3: 0 16px 40px rgba(0,0,0,.5), 0 4px 12px rgba(0,0,0,.35); --sh-thumb: 0 6px 14px -6px rgba(0,0,0,.7);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14161A; --surface: #1C1F24; --surface-raised: #23272E; --surface-sunken: #191C21;
+    --border: #2F343C; --border-strong: #3F454F;
+    --text: #EDE9E0; --text-muted: #A2A8B2; --text-faint: #6F757F;
+    --accent: #7FB89E; --accent-hover: #93C7AE; --accent-soft: #22332C; --accent-contrast: #0F1A15;
+    --danger: #E0766B; --danger-soft: #3A2321; --success: #7CC49A; --warning: #D9A94A; --warning-soft: #33290F;
+    --scrim: rgba(0,0,0,.6); --focus: #7FB89E; --card-border-alpha: #2F343C; --shimmer: rgba(255,255,255,.07);
+    --sec-intro-ink: #E2B65C;  --sec-intro-tint: #33290F;
+    --sec-marco-ink: #B3A5E0;  --sec-marco-tint: #2A2540;
+    --sec-metodo-ink: #7CC3D2; --sec-metodo-tint: #173036;
+    --sec-result-ink: #E8967A; --sec-result-tint: #3A241B;
+    --sec-discus-ink: #9AB4E6; --sec-discus-tint: #1F2A40;
+    --sec-concl-ink: #E094B8;  --sec-concl-tint: #381E2B;
+    --sec-none-ink: #A2A8B2;   --sec-none-tint: #262A31;
+    --sh-1: 0 1px 2px rgba(0,0,0,.3); --sh-2: 0 4px 12px rgba(0,0,0,.35), 0 1px 3px rgba(0,0,0,.3);
+    --sh-3: 0 16px 40px rgba(0,0,0,.5), 0 4px 12px rgba(0,0,0,.35); --sh-thumb: 0 6px 14px -6px rgba(0,0,0,.7);
+  }
+}
+
+/* =========================================================
+   2. BASE
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100dvh;
+  font-family: var(--font-ui); font-size: 14px; line-height: 1.5; color: var(--text);
+  background: var(--bg); -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+a { color: var(--accent); }
+h1, h2, h3, p { margin: 0; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--r-sm); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+[hidden] { display: none !important; }
+.muted { color: var(--text-muted); }
+.mono-nums { font-variant-numeric: tabular-nums; }
+svg.ic { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+svg.ic.sm { width: 14px; height: 14px; }
+::selection { background: var(--accent-soft); }
+
+/* =========================================================
+   3. CONTROLS
+   ========================================================= */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 38px; padding: 0 14px; border-radius: var(--r-md); font-weight: 500; font-size: 13.5px;
+  border: 1px solid transparent; transition: background var(--d-fast), border-color var(--d-fast), transform var(--d-fast), box-shadow var(--d-fast);
+  white-space: nowrap; user-select: none;
+}
+.btn:active { transform: translateY(1px); }
+.btn--primary { background: var(--accent); color: var(--accent-contrast); box-shadow: var(--sh-1); }
+.btn--primary:hover { background: var(--accent-hover); }
+.btn--secondary { background: var(--surface-raised); border-color: var(--border-strong); }
+.btn--secondary:hover { background: var(--surface-sunken); }
+.btn--ghost { color: var(--text-muted); }
+.btn--ghost:hover { background: var(--surface-sunken); color: var(--text); }
+.btn--danger { background: var(--danger); color: #fff; }
+.btn--danger:hover { filter: brightness(.95); }
+.btn--text-danger { color: var(--danger); }
+.btn--icon { width: 36px; height: 36px; padding: 0; border-radius: var(--r-md); color: var(--text-muted); position: relative; }
+.btn--icon:hover { background: var(--surface-sunken); color: var(--text); }
+.btn--icon.is-on { color: var(--accent); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.btn--sm { height: 30px; padding: 0 10px; font-size: 12.5px; }
+.dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--surface-raised); }
+
+.select {
+  height: 36px; padding: 0 30px 0 10px; border-radius: var(--r-md); border: 1px solid var(--border-strong);
+  background: var(--surface-raised) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235F6672' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center;
+  appearance: none; -webkit-appearance: none; font-size: 13px; font-weight: 500; color: var(--text);
+}
+.select:hover { background-color: var(--surface-sunken); }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field__label { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: .02em; }
+.field__input, .field textarea, .field select {
+  height: 38px; padding: 0 12px; border-radius: var(--r-md); border: 1px solid var(--border-strong);
+  background: var(--surface-raised); color: var(--text); width: 100%;
+}
+.field textarea { height: auto; padding: 10px 12px; resize: vertical; min-height: 80px; line-height: 1.5; }
+.field__input:focus, .field textarea:focus, .field select:focus { outline: 2px solid var(--focus); outline-offset: 0; border-color: transparent; }
+.field__hint { font-size: 12px; color: var(--text-faint); }
+.field--inline { flex-direction: row; align-items: center; gap: 10px; }
+.field--inline input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); }
+
+.segmented { display: inline-flex; padding: 3px; background: var(--surface-sunken); border-radius: var(--r-md); gap: 2px; }
+.segmented__btn {
+  display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 8px;
+  font-size: 12.5px; font-weight: 500; color: var(--text-muted); transition: background var(--d-base), color var(--d-base), box-shadow var(--d-base);
+}
+.segmented__btn[aria-pressed="true"] { background: var(--surface-raised); color: var(--text); box-shadow: var(--sh-1); }
+.segmented__btn:hover:not([aria-pressed="true"]) { color: var(--text); }
+
+.lang-toggle { display: inline-flex; padding: 3px; background: var(--surface-sunken); border-radius: var(--r-pill); }
+.lang-toggle__btn { height: 30px; padding: 0 12px; border-radius: var(--r-pill); font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--text-muted); transition: background var(--d-base), color var(--d-base); }
+.lang-toggle__btn[aria-pressed="true"] { background: var(--surface-raised); color: var(--text); box-shadow: var(--sh-1); }
+
+.search { position: relative; max-width: 460px; width: 100%; }
+.search svg.ic { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-faint); pointer-events: none; }
+.search__input {
+  width: 100%; height: 40px; padding: 0 38px 0 38px; border-radius: var(--r-md); border: 1px solid transparent;
+  background: var(--surface-sunken); transition: background var(--d-fast), border-color var(--d-fast);
+}
+.search__input:focus { background: var(--surface-raised); border-color: var(--border-strong); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+.search__clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: var(--r-sm); display: inline-flex; align-items: center; justify-content: center; color: var(--text-faint); }
+.search__clear:hover { background: var(--surface-raised); color: var(--text); }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: var(--r-pill);
+  font-size: 12px; font-weight: 500; line-height: 1; white-space: nowrap; border: 1px solid var(--border-strong);
+  color: var(--text-muted); background: transparent; transition: background var(--d-fast), color var(--d-fast), border-color var(--d-fast), transform var(--d-base);
+  --sec-ink: var(--sec-none-ink); --sec-tint: var(--sec-none-tint);
+}
+.chip--intro { --sec-ink: var(--sec-intro-ink); --sec-tint: var(--sec-intro-tint); }
+.chip--marco { --sec-ink: var(--sec-marco-ink); --sec-tint: var(--sec-marco-tint); }
+.chip--metodo { --sec-ink: var(--sec-metodo-ink); --sec-tint: var(--sec-metodo-tint); }
+.chip--result { --sec-ink: var(--sec-result-ink); --sec-tint: var(--sec-result-tint); }
+.chip--discus { --sec-ink: var(--sec-discus-ink); --sec-tint: var(--sec-discus-tint); }
+.chip--concl { --sec-ink: var(--sec-concl-ink); --sec-tint: var(--sec-concl-tint); }
+.chip--section.is-filled, .chip--filter[aria-pressed="true"] { background: var(--sec-tint); color: var(--sec-ink); border-color: color-mix(in srgb, var(--sec-ink) 40%, transparent); }
+.chip--section:not(.is-filled):hover, .chip--filter:not([aria-pressed="true"]):hover { background: color-mix(in srgb, var(--sec-tint) 60%, transparent); color: var(--sec-ink); }
+.chip--section.is-filled.pop { animation: chipPop var(--d-base) var(--ease); }
+.chip--section.shake { animation: chipShake 260ms var(--ease); }
+.chip--add { border-style: dashed; padding: 0 8px; }
+.chip--add:hover { color: var(--text); border-color: var(--text-muted); }
+.chip--kw { height: 22px; padding: 0 8px; font-size: 11px; background: var(--surface-sunken); border-color: transparent; color: var(--text-muted); }
+.chip--static { cursor: default; }
+.chip__count { font-size: 11px; font-weight: 600; opacity: .8; padding-left: 2px; }
+.chip__sparkle { width: 12px; height: 12px; }
+.chip__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sec-ink); flex: none; }
+@keyframes chipPop { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
+@keyframes chipShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+
+.menu { position: fixed; z-index: 60; min-width: 200px; padding: 6px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: var(--sh-3); animation: fadeUp var(--d-fast) var(--ease-out); }
+.menu__item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border-radius: 7px; font-size: 13px; text-align: left; }
+.menu__item:hover { background: var(--surface-sunken); }
+.menu__item--danger { color: var(--danger); }
+.menu__sep { height: 1px; background: var(--border); margin: 6px 4px; }
+.menu__label { padding: 6px 10px 2px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-faint); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* =========================================================
+   4. APP BAR + STATS
+   ========================================================= */
+.app { max-width: 1360px; margin: 0 auto; padding: 0 32px 80px; }
+.app-bar {
+  position: sticky; top: 0; z-index: 40; height: var(--bar-h);
+  background: color-mix(in srgb, var(--surface) 90%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.app-bar__inner { max-width: 1360px; margin: 0 auto; padding: 0 32px; height: 100%; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px; }
+.app-bar__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+.app-bar__mono { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: var(--accent-contrast); display: grid; place-items: center; font-family: var(--font-display); font-weight: 600; font-size: 19px; line-height: 1; }
+.app-bar__name { font-family: var(--font-display); font-weight: 600; font-size: 20px; letter-spacing: -.01em; }
+.app-bar__tag { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-left: 6px; }
+.app-bar__center { display: flex; justify-content: center; }
+.app-bar__actions { display: flex; align-items: center; gap: 8px; }
+.app-bar__actions .hide-md { display: inline-flex; }
+.stats { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 18px 0 6px; }
+.stats__total { font-size: 13px; font-weight: 500; color: var(--text-muted); margin-right: 6px; }
+.stats .btn--ghost { height: 26px; padding: 0 8px; font-size: 12px; }
+
+/* =========================================================
+   5. HERO / DROPZONE / UPLOAD PANEL
+   ========================================================= */
+.hero { max-width: 600px; margin: 56px auto 0; text-align: center; }
+.hero__art { width: 220px; height: 150px; margin: 0 auto 26px; display: block; }
+.hero__title { font-family: var(--font-display); font-weight: 500; font-size: 30px; line-height: 1.15; letter-spacing: -.01em; margin-bottom: 10px; }
+.hero__body { color: var(--text-muted); font-size: 15px; line-height: 1.55; max-width: 480px; margin: 0 auto 26px; }
+.dropzone {
+  border: 2px dashed var(--border-strong); border-radius: var(--r-lg); padding: 28px 20px; min-height: 150px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  transition: border-color var(--d-base), background var(--d-base); background: color-mix(in srgb, var(--surface) 60%, transparent);
+}
+.dropzone.is-active { border-color: var(--accent); background: var(--accent-soft); }
+.dropzone__hint { font-size: 13px; color: var(--text-faint); }
+.dropzone__note { font-size: 12px; color: var(--text-faint); margin-top: 6px; max-width: 420px; }
+.dropzone--compact { min-height: 56px; padding: 12px; margin: 10px 0 0; flex-direction: row; display: none; }
+body.is-dragging .dropzone--compact { display: flex; }
+@media (pointer: coarse) { .dropzone__hint { display: none; } }
+
+.upload-panel {
+  position: fixed; right: 20px; bottom: 20px; z-index: 55; width: 360px; max-width: calc(100vw - 32px);
+  background: var(--surface-raised); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--sh-3); overflow: hidden;
+  animation: fadeUp var(--d-base) var(--ease-out);
+}
+.upload-panel__head { display: flex; align-items: center; justify-content: space-between; padding: 12px 10px 12px 16px; font-weight: 600; font-size: 13px; border-bottom: 1px solid var(--border); }
+.upload-panel__rows { max-height: 260px; overflow: auto; }
+.upload-panel__row { display: grid; grid-template-columns: 20px 1fr auto; gap: 10px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 12.5px; }
+.upload-panel__row:last-child { border-bottom: 0; }
+.upload-panel__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.upload-panel__stage { color: var(--text-muted); font-size: 12px; }
+.upload-panel__bar { height: 2px; background: var(--surface-sunken); border-radius: 1px; margin-top: 6px; overflow: hidden; }
+.upload-panel__bar i { display: block; height: 100%; width: 40%; background: var(--accent); border-radius: 1px; animation: indet 1.4s infinite var(--ease); }
+.upload-panel__row.is-done .upload-panel__bar { display: none; }
+.upload-panel__row.is-done svg.ic { color: var(--success); }
+.upload-panel__row.is-error svg.ic { color: var(--danger); }
+@keyframes indet { 0% { transform: translateX(-100%); } 100% { transform: translateX(260%); } }
+.spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border-strong); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* =========================================================
+   6. LIBRARY GRID + CARDS
+   ========================================================= */
+.library { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); gap: 20px; padding-top: 14px; }
+.library--list { grid-template-columns: 1fr; }
+.empty-note { padding: 48px 20px; text-align: center; color: var(--text-muted); grid-column: 1 / -1; }
+
+.card {
+  background: var(--surface-raised); border: 1px solid var(--card-border-alpha); border-radius: var(--r-lg); box-shadow: var(--sh-1);
+  padding: 18px 20px 14px; display: flex; flex-direction: column; gap: 14px; position: relative;
+  transition: transform var(--d-base) var(--ease), box-shadow var(--d-base) var(--ease);
+}
+@media (hover: hover) { .card:hover { transform: translateY(-2px); box-shadow: var(--sh-2); } }
+.card__sections { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.card__body { display: grid; grid-template-columns: 112px 1fr; gap: 18px; }
+.card__thumb {
+  aspect-ratio: 210 / 297; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; box-shadow: var(--sh-thumb);
+  overflow: hidden; position: relative; display: block; width: 100%; padding: 0; cursor: pointer;
+}
+.card__thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.card__thumb-overlay {
+  position: absolute; inset: 0; display: grid; place-items: center; background: var(--scrim); opacity: 0; transition: opacity var(--d-fast);
+  color: #fff; font-size: 12px; font-weight: 600;
+}
+.card__thumb-overlay span { padding: 6px 10px; border-radius: var(--r-pill); background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.4); }
+@media (hover: hover) { .card__thumb:hover .card__thumb-overlay, .card__thumb:focus-visible .card__thumb-overlay { opacity: 1; } }
+.card__thumb-placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: var(--text-faint); }
+.card__main { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.card__title { font-family: var(--font-display); font-weight: 600; font-size: 19px; line-height: 1.3; letter-spacing: -.005em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card__meta { font-size: 12.5px; color: var(--text-muted); font-weight: 500; }
+.card__meta b { color: var(--text); font-weight: 500; }
+.card__summary { font-size: 14px; line-height: 1.58; color: var(--text); }
+.card__summary.is-clamped { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card__expand { color: var(--accent); font-size: 13px; font-weight: 500; align-self: flex-start; }
+.card__conclusion { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 9px 12px; border-radius: 0 8px 8px 0; }
+.label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+.card__conclusion .label { color: var(--accent); display: block; margin-bottom: 3px; }
+.card__conclusion p { font-size: 13.5px; line-height: 1.5; }
+.card__citation { background: var(--surface-sunken); border-radius: var(--r-md); padding: 10px 12px; }
+.card__citation-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.card__citation-head .btn--icon { width: 28px; height: 28px; }
+.card__citation-text { font-family: var(--font-display); font-size: 13.5px; line-height: 1.5; user-select: all; -webkit-user-select: all; word-break: break-word; }
+.card__keywords { display: flex; flex-wrap: wrap; gap: 5px; }
+.card__footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 2px; }
+.card__date { font-size: 12px; color: var(--text-faint); }
+.card__actions { display: flex; gap: 2px; }
+.card--error { border-color: color-mix(in srgb, var(--danger) 50%, transparent); }
+.card__error { display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; border-radius: var(--r-md); background: var(--danger-soft); font-size: 13px; }
+.card__error-actions { display: flex; gap: 8px; }
+.card__status { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-muted); }
+.card__status .dots i { display: inline-block; width: 4px; height: 4px; margin-left: 2px; border-radius: 50%; background: currentColor; animation: dots 900ms infinite; }
+.card__status .dots i:nth-child(2) { animation-delay: 200ms; } .card__status .dots i:nth-child(3) { animation-delay: 400ms; }
+@keyframes dots { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
+.is-spinning svg.ic { animation: spin 1s linear infinite; }
+
+.skeleton { position: relative; overflow: hidden; background: var(--surface-sunken); border-radius: 6px; }
+.skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, var(--shimmer), transparent); animation: shimmer 1.5s infinite linear; }
+.skeleton__bar { height: 12px; margin-bottom: 8px; }
+@keyframes shimmer { to { transform: translateX(100%); } }
+
+.card--compact { padding: 12px 14px; gap: 8px; }
+.card--compact .card__body { grid-template-columns: 52px 1fr; gap: 12px; }
+.card--compact .card__title { font-size: 15px; -webkit-line-clamp: 2; cursor: pointer; }
+.card--compact .card__title:hover { color: var(--accent); }
+.card--compact .card__meta { font-size: 12px; }
+.card--compact .card__footer { padding-top: 6px; }
+.tag--also { font-size: 11px; color: var(--text-faint); display: flex; flex-wrap: wrap; gap: 4px; }
+.tag--also b { font-weight: 500; }
+
+/* =========================================================
+   7. KANBAN (BY SECTION)
+   ========================================================= */
+.kanban { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, 1fr); gap: 14px; overflow-x: auto; padding: 14px 0 12px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+.kanban__col { background: var(--surface-sunken); border-radius: var(--r-lg); padding: 10px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 10px; min-height: 240px; --sec-ink: var(--sec-none-ink); --sec-tint: var(--sec-none-tint); }
+.kanban__col--intro { --sec-ink: var(--sec-intro-ink); --sec-tint: var(--sec-intro-tint); }
+.kanban__col--marco { --sec-ink: var(--sec-marco-ink); --sec-tint: var(--sec-marco-tint); }
+.kanban__col--metodo { --sec-ink: var(--sec-metodo-ink); --sec-tint: var(--sec-metodo-tint); }
+.kanban__col--result { --sec-ink: var(--sec-result-ink); --sec-tint: var(--sec-result-tint); }
+.kanban__col--discus { --sec-ink: var(--sec-discus-ink); --sec-tint: var(--sec-discus-tint); }
+.kanban__col--concl { --sec-ink: var(--sec-concl-ink); --sec-tint: var(--sec-concl-tint); }
+.kanban__head { display: flex; align-items: center; gap: 8px; padding: 6px 6px 2px; }
+.kanban__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sec-ink); }
+.kanban__name { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--sec-ink); flex: 1; }
+.kanban__count { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: var(--r-pill); background: var(--sec-tint); color: var(--sec-ink); }
+.kanban__desc { font-size: 12px; color: var(--text-muted); padding: 0 6px 4px; line-height: 1.4; }
+.kanban__body { display: flex; flex-direction: column; gap: 10px; }
+.kanban__empty { padding: 26px 10px; text-align: center; font-size: 12.5px; color: var(--text-faint); border: 1px dashed var(--border-strong); border-radius: var(--r-md); }
+
+/* =========================================================
+   8. OVERLAYS: DRAWER, DIALOGS, READER, TOASTS
+   ========================================================= */
+.backdrop { position: fixed; inset: 0; background: var(--scrim); z-index: 70; opacity: 0; pointer-events: none; transition: opacity var(--d-slow); }
+.backdrop.is-open { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 440px; max-width: 100vw; z-index: 71;
+  background: var(--surface-raised); box-shadow: var(--sh-3); border-radius: var(--r-xl) 0 0 var(--r-xl);
+  transform: translateX(105%); transition: transform var(--d-slow) var(--ease); display: flex; flex-direction: column;
+}
+.drawer.is-open { transform: none; }
+.drawer__head { display: flex; align-items: flex-start; gap: 12px; padding: 20px 20px 14px; border-bottom: 1px solid var(--border); }
+.drawer__head .label { display: block; margin-bottom: 4px; }
+.drawer__title { font-family: var(--font-display); font-size: 17px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
+.drawer__prompts { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 20px 0; }
+.drawer__body { flex: 1; display: flex; flex-direction: column; padding: 12px 20px 0; min-height: 0; }
+.drawer__textarea { flex: 1; width: 100%; resize: none; border: 0; border-radius: var(--r-md); background: var(--surface-sunken); padding: 14px; font-size: 15px; line-height: 1.6; min-height: 200px; }
+.drawer__textarea:focus { outline: 2px solid var(--focus); outline-offset: 0; }
+.drawer__foot { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px 20px; font-size: 12px; color: var(--text-faint); }
+.drawer__status { display: inline-flex; align-items: center; gap: 6px; transition: color var(--d-base); }
+.drawer__status.is-saved { color: var(--success); }
+
+dialog.dialog { border: 0; padding: 0; background: var(--surface-raised); color: var(--text); border-radius: var(--r-xl); box-shadow: var(--sh-3); width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); }
+dialog.dialog::backdrop { background: var(--scrim); }
+dialog.dialog[open] { animation: dialogIn 240ms var(--ease-out); }
+@keyframes dialogIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: none; } }
+.dialog__head { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 10px; }
+.dialog__title { font-family: var(--font-display); font-size: 24px; font-weight: 500; letter-spacing: -.01em; }
+.dialog__body { padding: 6px 20px 10px; overflow: auto; max-height: calc(100dvh - 190px); }
+.dialog__foot { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 20px 20px; }
+.dialog--confirm { width: min(420px, calc(100vw - 32px)); }
+.dialog--confirm .dialog__body { display: flex; flex-direction: column; gap: 8px; }
+.dialog--confirm .icon-wrap { width: 40px; height: 40px; border-radius: 50%; background: var(--danger-soft); color: var(--danger); display: grid; place-items: center; margin-bottom: 4px; }
+.dialog--wide { width: min(680px, calc(100vw - 32px)); }
+.form__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form__grid .span-2 { grid-column: 1 / -1; }
+.authors { display: flex; flex-direction: column; gap: 6px; }
+.authors__row { display: grid; grid-template-columns: 1fr 1fr auto auto auto; gap: 6px; align-items: center; }
+.authors__row .field__input { height: 34px; }
+.authors__row .btn--icon { width: 30px; height: 30px; }
+.cite-preview { background: var(--surface-sunken); border-radius: var(--r-md); padding: 10px 12px; margin-top: 12px; font-family: var(--font-display); font-size: 13.5px; line-height: 1.5; }
+.settings-section { padding: 12px 0; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.settings-section:first-child { border-top: 0; }
+.settings-section h3 { font-size: 14px; font-weight: 600; }
+.settings-section .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.key-input { display: flex; gap: 6px; }
+.key-input .field__input { flex: 1; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+.status-line { font-size: 12.5px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.status-line.ok { color: var(--success); } .status-line.err { color: var(--danger); }
+.banner { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--r-md); background: var(--warning-soft); color: var(--warning); font-size: 13px; margin-top: 14px; }
+.banner .btn { height: 28px; font-size: 12px; margin-left: auto; }
+
+dialog.reader { border: 0; padding: 0; width: 100vw; height: 100dvh; max-width: 100vw; max-height: 100dvh; background: #0E0F11; color: #fff; }
+dialog.reader::backdrop { background: #000; }
+.reader__bar { position: absolute; top: 0; left: 0; right: 0; height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 14px; background: rgba(14,15,17,.85); backdrop-filter: blur(8px); z-index: 2; }
+.reader__title { flex: 1; font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,.9); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reader__bar .btn--icon { color: rgba(255,255,255,.85); }
+.reader__bar .btn--icon:hover { background: rgba(255,255,255,.12); color: #fff; }
+.reader__page { font-variant-numeric: tabular-nums; font-size: 13px; color: rgba(255,255,255,.75); min-width: 64px; text-align: center; }
+.reader__zoom { font-variant-numeric: tabular-nums; font-size: 12.5px; color: rgba(255,255,255,.75); min-width: 44px; text-align: center; }
+.reader__stage { position: absolute; inset: 56px 0 0; overflow: auto; display: flex; justify-content: center; align-items: flex-start; padding: 24px; touch-action: pan-x pan-y pinch-zoom; }
+.reader__stage canvas { box-shadow: 0 20px 60px rgba(0,0,0,.6); background: #fff; max-width: none; }
+.reader__nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.1); color: #fff; display: grid; place-items: center; z-index: 2; }
+.reader__nav:hover { background: rgba(255,255,255,.2); }
+.reader__nav--prev { left: 14px; } .reader__nav--next { right: 14px; }
+.reader__loading { position: absolute; inset: 56px 0 0; display: grid; place-items: center; color: rgba(255,255,255,.7); font-size: 13px; z-index: 1; }
+
+.toast-region { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 90; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--r-md); background: var(--text); color: var(--bg); font-size: 13px; font-weight: 500; box-shadow: var(--sh-3); animation: fadeUp var(--d-base) var(--ease-out); pointer-events: auto; max-width: min(480px, calc(100vw - 32px)); }
+.toast--error svg.ic { color: #F19C93; }
+.toast--success svg.ic { color: #9ADBB5; }
+
+/* =========================================================
+   9. RESPONSIVE + MOTION
+   ========================================================= */
+@media (max-width: 1100px) {
+  .app-bar__actions .lbl { display: none; }
+}
+@media (max-width: 900px) {
+  .app, .app-bar__inner { padding-left: 20px; padding-right: 20px; }
+  .app-bar__inner { gap: 12px; }
+  .app-bar__actions .hide-md { display: none; }
+  .app-bar__actions .show-md { display: inline-flex; }
+  .kanban { grid-auto-columns: minmax(280px, 82vw); }
+}
+@media (min-width: 901px) { .app-bar__actions .show-md { display: none; } }
+@media (max-width: 640px) {
+  .app, .app-bar__inner { padding-left: 14px; padding-right: 14px; }
+  .app-bar__inner { grid-template-columns: auto 1fr auto; }
+  .app-bar__center { display: none; }
+  .app-bar__tag { display: none; }
+  .app-bar__name { font-size: 18px; }
+  .btn--primary .lbl-add { display: none; }
+  .btn--primary { width: 40px; padding: 0; }
+  .search--mobile { display: block; padding: 12px 0 0; max-width: none; }
+  .card { padding: 14px; }
+  .card__body { grid-template-columns: 88px 1fr; gap: 12px; }
+  .card__title { font-size: 17px; }
+  .drawer { width: 100vw; border-radius: 0; }
+  .form__grid { grid-template-columns: 1fr; }
+  .authors__row { grid-template-columns: 1fr 1fr auto; }
+  .authors__row .btn--reorder { display: none; }
+  .upload-panel { right: 12px; left: 12px; bottom: 12px; width: auto; }
+}
+@media (min-width: 641px) { .search--mobile { display: none; } }
+@media (pointer: coarse) {
+  .btn--icon { width: 42px; height: 42px; }
+  .card__citation-head .btn--icon { width: 36px; height: 36px; }
+  .chip--section { height: 30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+  .skeleton::after { display: none; }
+}
+@media print {
+  .app-bar, .stats, .card__footer, .card__thumb-overlay, .dropzone, .upload-panel { display: none !important; }
+  .card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+<header class="app-bar">
+  <div class="app-bar__inner">
+    <a class="app-bar__brand" href="#" id="brand">
+      <span class="app-bar__mono" aria-hidden="true">B</span>
+      <span class="app-bar__name" data-i18n="brand.name">Biblioteca</span>
+      <span class="app-bar__tag">TFM</span>
+    </a>
+    <div class="app-bar__center">
+      <div class="search">
+        <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input class="search__input" id="search" type="search" autocomplete="off" data-i18n-attr="placeholder:search.placeholder" placeholder="Buscar por título, autor o palabra clave…" aria-label="Buscar">
+        <button class="search__clear" id="searchClear" type="button" hidden data-i18n-attr="aria-label:search.clear"><svg class="ic sm" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+    </div>
+    <div class="app-bar__actions">
+      <div class="segmented hide-md" role="group" data-i18n-attr="aria-label:view.label" aria-label="Vista">
+        <button class="segmented__btn" type="button" data-view="grid" aria-pressed="true"><svg class="ic sm" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="lbl" data-i18n="view.grid">Cronológico</span></button>
+        <button class="segmented__btn" type="button" data-view="sections" aria-pressed="false"><svg class="ic sm" viewBox="0 0 24 24"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="4" height="15" rx="1.5"/></svg><span class="lbl" data-i18n="view.sections">Por sección</span></button>
+      </div>
+      <select class="select hide-md" id="citeStyle" data-i18n-attr="aria-label:cite.label" aria-label="Estilo de cita"></select>
+      <select class="select hide-md" id="sort" data-i18n-attr="aria-label:sort.label" aria-label="Ordenar"></select>
+      <div class="lang-toggle" role="group" data-i18n-attr="aria-label:lang.toggle" aria-label="Cambiar idioma">
+        <button class="lang-toggle__btn" type="button" data-lang="es" aria-pressed="true">ES</button>
+        <button class="lang-toggle__btn" type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button class="btn btn--icon show-md" type="button" id="moreBtn" data-i18n-attr="aria-label:action.more" aria-label="Más opciones"><svg class="ic" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg></button>
+      <button class="btn btn--icon hide-md" type="button" id="themeBtn" data-i18n-attr="aria-label:theme.toggle" aria-label="Tema"><svg class="ic" id="themeIcon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4 1.4-1.4"/></svg></button>
+      <button class="btn btn--icon hide-md" type="button" id="settingsBtn" data-i18n-attr="aria-label:settings.title" aria-label="Ajustes"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg><span class="dot" id="settingsDot" hidden></span></button>
+      <button class="btn btn--primary" type="button" id="addBtn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span class="lbl-add" data-i18n="add.button">Añadir PDF</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="app" id="app">
+  <div class="search search--mobile">
+    <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input class="search__input" id="searchMobile" type="search" autocomplete="off" data-i18n-attr="placeholder:search.placeholder" placeholder="Buscar…" aria-label="Buscar">
+  </div>
+
+  <div class="banner" id="aiBanner" hidden>
+    <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg>
+    <span data-i18n="banner.no_key">Configura tu clave de API de Anthropic para que Claude analice los PDF.</span>
+    <button class="btn btn--secondary" type="button" id="aiBannerBtn" data-i18n="settings.open">Abrir ajustes</button>
+  </div>
+  <div class="banner" id="backupBanner" hidden>
+    <svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+    <span data-i18n="banner.backup">Hace tiempo que no guardas una copia de seguridad de tu biblioteca.</span>
+    <button class="btn btn--secondary" type="button" id="backupBannerBtn" data-i18n="backup.export">Exportar copia</button>
+  </div>
+
+  <section class="stats" id="stats" aria-label="Filtros" hidden></section>
+
+  <section class="hero" id="hero">
+    <svg class="hero__art" viewBox="0 0 220 150" aria-hidden="true">
+      <g transform="rotate(-7 60 90)"><rect x="30" y="30" width="80" height="108" rx="6" fill="var(--surface-raised)" stroke="var(--border-strong)"/><rect x="42" y="46" width="44" height="4" rx="2" fill="var(--border-strong)"/><rect x="42" y="58" width="56" height="3" rx="1.5" fill="var(--border)"/><rect x="42" y="66" width="52" height="3" rx="1.5" fill="var(--border)"/><rect x="42" y="74" width="56" height="3" rx="1.5" fill="var(--border)"/><rect x="42" y="82" width="36" height="3" rx="1.5" fill="var(--border)"/></g>
+      <g transform="rotate(6 160 90)"><rect x="112" y="26" width="80" height="108" rx="6" fill="var(--surface-raised)" stroke="var(--border-strong)"/><rect x="124" y="42" width="40" height="4" rx="2" fill="var(--border-strong)"/><rect x="124" y="54" width="56" height="3" rx="1.5" fill="var(--border)"/><rect x="124" y="62" width="50" height="3" rx="1.5" fill="var(--border)"/><rect x="124" y="70" width="56" height="3" rx="1.5" fill="var(--border)"/><rect x="124" y="78" width="30" height="3" rx="1.5" fill="var(--border)"/></g>
+      <rect x="70" y="18" width="84" height="112" rx="6" fill="var(--surface-raised)" stroke="var(--border-strong)"/>
+      <rect x="82" y="34" width="50" height="4" rx="2" fill="var(--text-muted)"/><rect x="82" y="46" width="60" height="3" rx="1.5" fill="var(--border-strong)"/><rect x="82" y="54" width="56" height="3" rx="1.5" fill="var(--border-strong)"/><rect x="82" y="62" width="60" height="3" rx="1.5" fill="var(--border-strong)"/><rect x="82" y="70" width="44" height="3" rx="1.5" fill="var(--border-strong)"/>
+      <path d="M84 92c10-8 20 4 30-4s18 2 26-6" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M170 14l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--accent)"/>
+    </svg>
+    <h1 class="hero__title" data-i18n="empty.title">Tu biblioteca está vacía</h1>
+    <p class="hero__body" data-i18n="empty.body">Sube los artículos que vayas leyendo. Claude preparará el resumen, la cita y la sección del TFM donde encajan.</p>
+    <div class="dropzone" id="dropzone">
+      <button class="btn btn--primary" type="button" id="heroAddBtn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 16V4m0 0 4 4m-4-4-4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg><span data-i18n="add.choose">Elegir PDF…</span></button>
+      <span class="dropzone__hint" data-i18n="add.drop_hint">o arrastra los archivos aquí</span>
+      <span class="dropzone__note" data-i18n="add.note">Los PDF y tus notas se guardan solo en este navegador. El análisis usa tu propia clave de Anthropic.</span>
+    </div>
+  </section>
+
+  <div class="dropzone dropzone--compact" id="dropzoneCompact"><svg class="ic" viewBox="0 0 24 24"><path d="M12 16V4m0 0 4 4m-4-4-4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg><span data-i18n="add.drop_active">Suelta para añadir</span></div>
+
+  <section id="library" aria-label="Biblioteca"></section>
+</main>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <div class="drawer__head">
+    <div style="flex:1;min-width:0">
+      <span class="label" data-i18n="notes.title">Notas</span>
+      <h2 class="drawer__title" id="drawerTitle"></h2>
+    </div>
+    <button class="btn btn--icon" type="button" id="drawerClose" data-i18n-attr="aria-label:action.close" aria-label="Cerrar"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="drawer__prompts" id="drawerPrompts"></div>
+  <div class="drawer__body">
+    <textarea class="drawer__textarea" id="drawerText" data-i18n-attr="placeholder:notes.placeholder" placeholder="Escribe aquí tus ideas…" aria-label="Notas"></textarea>
+  </div>
+  <div class="drawer__foot">
+    <span class="drawer__status" id="drawerStatus"></span>
+    <span class="mono-nums" id="drawerCount"></span>
+  </div>
+</aside>
+
+<dialog class="reader" id="reader" aria-label="PDF">
+  <div class="reader__bar">
+    <span class="reader__title" id="readerTitle"></span>
+    <span class="reader__page mono-nums" id="readerPage"></span>
+    <button class="btn btn--icon" type="button" id="readerZoomOut" data-i18n-attr="aria-label:reader.zoom_out"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6"/></svg></button>
+    <span class="reader__zoom" id="readerZoom">100%</span>
+    <button class="btn btn--icon" type="button" id="readerZoomIn" data-i18n-attr="aria-label:reader.zoom_in"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M11 8v6M8 11h6"/></svg></button>
+    <button class="btn btn--icon" type="button" id="readerFit" data-i18n-attr="aria-label:reader.fit"><svg class="ic" viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button>
+    <button class="btn btn--icon" type="button" id="readerDownload" data-i18n-attr="aria-label:action.download"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></button>
+    <button class="btn btn--icon" type="button" id="readerClose" data-i18n-attr="aria-label:action.close"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="reader__loading" id="readerLoading" hidden><span class="spinner"></span></div>
+  <div class="reader__stage" id="readerStage"><canvas id="readerCanvas"></canvas></div>
+  <button class="reader__nav reader__nav--prev" type="button" id="readerPrev" data-i18n-attr="aria-label:reader.prev"><svg class="ic" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+  <button class="reader__nav reader__nav--next" type="button" id="readerNext" data-i18n-attr="aria-label:reader.next"><svg class="ic" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+</dialog>
+
+<dialog class="dialog dialog--wide" id="editDialog" aria-labelledby="editTitle">
+  <form method="dialog" id="editForm">
+    <div class="dialog__head"><h2 class="dialog__title" id="editTitle" data-i18n="edit.title">Editar metadatos</h2><button class="btn btn--icon" type="button" data-close data-i18n-attr="aria-label:action.close"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="dialog__body">
+      <div class="form__grid">
+        <label class="field span-2"><span class="field__label" data-i18n="edit.type">Tipo de documento</span><select class="select" name="type" id="editType"></select></label>
+        <label class="field span-2"><span class="field__label" data-i18n="edit.paper_title">Título</span><input class="field__input" name="title"></label>
+        <div class="field span-2"><span class="field__label" data-i18n="edit.authors">Autores</span><div class="authors" id="editAuthors"></div><button class="btn btn--ghost btn--sm" type="button" id="editAddAuthor" style="align-self:flex-start"><svg class="ic sm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="edit.add_author">Añadir autor</span></button></div>
+        <label class="field"><span class="field__label" data-i18n="edit.year">Año</span><input class="field__input" name="year" inputmode="numeric"></label>
+        <label class="field"><span class="field__label" data-i18n="edit.container">Revista / libro</span><input class="field__input" name="container"></label>
+        <label class="field"><span class="field__label" data-i18n="edit.volume">Volumen</span><input class="field__input" name="volume"></label>
+        <label class="field"><span class="field__label" data-i18n="edit.issue">Número</span><input class="field__input" name="issue"></label>
+        <label class="field"><span class="field__label" data-i18n="edit.pages">Páginas</span><input class="field__input" name="pages"></label>
+        <label class="field"><span class="field__label" data-i18n="edit.publisher">Editorial / institución</span><input class="field__input" name="publisher"></label>
+        <label class="field"><span class="field__label">DOI</span><input class="field__input" name="doi"></label>
+        <label class="field"><span class="field__label">URL</span><input class="field__input" name="url" inputmode="url"></label>
+        <label class="field span-2"><span class="field__label" data-i18n="edit.summary">Resumen</span><textarea name="summary" rows="3"></textarea></label>
+        <label class="field span-2"><span class="field__label" data-i18n="conclusion.label">Conclusión principal</span><textarea name="conclusion" rows="2"></textarea></label>
+      </div>
+      <div class="cite-preview"><span class="label" data-i18n="edit.preview">Vista previa de la cita</span><div id="editPreview" style="margin-top:4px"></div></div>
+    </div>
+    <div class="dialog__foot"><button class="btn btn--ghost" type="button" data-close data-i18n="action.cancel">Cancelar</button><button class="btn btn--primary" type="submit" data-i18n="action.save">Guardar</button></div>
+  </form>
+</dialog>
+
+<dialog class="dialog" id="settingsDialog" aria-labelledby="settingsTitle">
+  <div class="dialog__head"><h2 class="dialog__title" id="settingsTitle" data-i18n="settings.title">Ajustes</h2><button class="btn btn--icon" type="button" data-close data-i18n-attr="aria-label:action.close"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+  <div class="dialog__body">
+    <div class="settings-section">
+      <h3 data-i18n="settings.ai_title">Análisis con Claude</h3>
+      <p class="field__hint" data-i18n="settings.ai_hint">Crea una clave en console.anthropic.com (recomendado: con límite de gasto). Se guarda solo en este navegador.</p>
+      <div class="key-input"><input class="field__input" id="apiKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…" aria-label="API key"><button class="btn btn--secondary" type="button" id="apiKeyToggle" data-i18n="settings.show">Mostrar</button></div>
+      <div class="row"><button class="btn btn--secondary" type="button" id="apiKeyTest" data-i18n="settings.test">Probar conexión</button><span class="status-line" id="apiKeyStatus"></span></div>
+      <label class="field"><span class="field__label" data-i18n="settings.model">Modelo</span><select class="select" id="modelSelect"></select></label>
+      <p class="field__hint" id="modelHint"></p>
+    </div>
+    <div class="settings-section">
+      <h3 data-i18n="settings.appearance">Apariencia</h3>
+      <label class="field"><span class="field__label" data-i18n="theme.label">Tema</span><select class="select" id="themeSelect"><option value="system" data-i18n="theme.system">Automático</option><option value="light" data-i18n="theme.light">Claro</option><option value="dark" data-i18n="theme.dark">Oscuro</option></select></label>
+    </div>
+    <div class="settings-section">
+      <h3 data-i18n="backup.title">Copia de seguridad</h3>
+      <p class="field__hint" data-i18n="backup.hint">Tu biblioteca vive en este navegador. Exporta una copia para pasarla a otro dispositivo o protegerte si el navegador borra los datos.</p>
+      <label class="field field--inline"><input type="checkbox" id="backupIncludePdf" checked><span data-i18n="backup.include_pdf">Incluir los PDF en la copia</span></label>
+      <div class="row"><button class="btn btn--secondary" type="button" id="backupExport"><svg class="ic sm" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg><span data-i18n="backup.export">Exportar copia</span></button><button class="btn btn--secondary" type="button" id="backupImport"><svg class="ic sm" viewBox="0 0 24 24"><path d="M12 15V3m0 0 4 4m-4-4-4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg><span data-i18n="backup.import">Importar copia</span></button><button class="btn btn--secondary" type="button" id="bibExport"><svg class="ic sm" viewBox="0 0 24 24"><path d="M6 3h9l5 5v13H6zM14 3v6h6"/></svg><span data-i18n="backup.bib">Exportar bibliografía</span></button></div>
+      <span class="status-line" id="storageLine"></span>
+    </div>
+    <div class="settings-section">
+      <h3 data-i18n="settings.danger">Zona de peligro</h3>
+      <div class="row"><button class="btn btn--secondary btn--text-danger" type="button" id="wipeBtn" data-i18n="settings.wipe">Borrar toda la biblioteca</button></div>
+    </div>
+  </div>
+  <div class="dialog__foot"><button class="btn btn--primary" type="button" data-close data-i18n="action.close">Cerrar</button></div>
+</dialog>
+
+<dialog class="dialog dialog--confirm" id="confirmDialog" aria-labelledby="confirmTitle">
+  <div class="dialog__head"><div class="icon-wrap"><svg class="ic" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v6M14 10v6"/></svg></div></div>
+  <div class="dialog__body"><h2 class="dialog__title" id="confirmTitle" style="font-size:20px"></h2><p class="muted" id="confirmBody"></p></div>
+  <div class="dialog__foot"><button class="btn btn--ghost" type="button" data-close data-i18n="action.cancel">Cancelar</button><button class="btn btn--danger" type="button" id="confirmOk"></button></div>
+</dialog>
+
+<dialog class="dialog dialog--wide" id="paperDialog" aria-label="Artículo">
+  <div class="dialog__head" style="padding-bottom:0;justify-content:flex-end"><button class="btn btn--icon" type="button" data-close data-i18n-attr="aria-label:action.close"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+  <div class="dialog__body" id="paperDialogBody" style="padding-top:0"></div>
+</dialog>
+
+<div class="upload-panel" id="uploadPanel" hidden>
+  <div class="upload-panel__head"><span id="uploadPanelTitle"></span><button class="btn btn--icon" type="button" id="uploadPanelClose" style="width:28px;height:28px" data-i18n-attr="aria-label:action.close"><svg class="ic sm" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+  <div class="upload-panel__rows" id="uploadRows"></div>
+</div>
+
+<div class="toast-region" id="toasts" aria-live="polite" aria-atomic="false"></div>
+<div class="sr-only" aria-live="polite" id="liveRegion"></div>
+<input type="file" id="fileInput" accept="application/pdf,.pdf" multiple hidden>
+<input type="file" id="importInput" accept="application/json,.json" hidden>
+<script type="module">
+/* =========================================================
+   1. CONSTANTS
+   ========================================================= */
+const SDK_URL = "https://cdn.jsdelivr.net/npm/@anthropic-ai/sdk@0.125.0/+esm";
+const PDFJS_VERSION = "3.11.174";
+const SECTION_KEYS = ["intro", "marco", "metodo", "result", "discus", "concl"];
+const CITE_STYLES = ["apa", "mla", "chicago", "harvard", "ieee", "vancouver"];
+const SORTS = ["added_desc", "added_asc", "year_desc", "year_asc", "title", "author"];
+const DOC_TYPES = ["article", "book", "chapter", "thesis", "conference", "report", "web", "other"];
+const MODELS = [
+  { id: "claude-opus-5", es: "Claude Opus 5 · máxima calidad (≈ 0,05 $/artículo)", en: "Claude Opus 5 · best quality (≈ $0.05/paper)" },
+  { id: "claude-sonnet-5", es: "Claude Sonnet 5 · equilibrado (≈ 0,02 $/artículo)", en: "Claude Sonnet 5 · balanced (≈ $0.02/paper)" },
+  { id: "claude-haiku-4-5", es: "Claude Haiku 4.5 · rápido y económico (≈ 0,01 $/artículo)", en: "Claude Haiku 4.5 · fast and cheap (≈ $0.01/paper)" },
+];
+const TRANSLATE_MODEL = "claude-haiku-4-5";
+const HEAD_CHARS = 14000, TAIL_CHARS = 5000, MAX_HEAD_PAGES = 12, TAIL_PAGES = 4;
+const DEMO = new URLSearchParams(location.search).get("demo") === "1";
+
+/* =========================================================
+   2. I18N
+   ========================================================= */
+const T = {
+  es: {
+    "brand.name": "Biblioteca", "search.placeholder": "Buscar por título, autor o palabra clave…", "search.clear": "Borrar búsqueda",
+    "view.label": "Vista", "view.grid": "Cronológico", "view.sections": "Por sección", "sort.label": "Ordenar", "cite.label": "Estilo de cita",
+    "sort.added_desc": "Más recientes primero", "sort.added_asc": "Más antiguos primero", "sort.year_desc": "Año de publicación ↓", "sort.year_asc": "Año de publicación ↑", "sort.title": "Título A–Z", "sort.author": "Primer autor A–Z",
+    "cite.apa": "APA 7", "cite.mla": "MLA 9", "cite.chicago": "Chicago", "cite.harvard": "Harvard", "cite.ieee": "IEEE", "cite.vancouver": "Vancouver",
+    "lang.toggle": "Cambiar idioma", "theme.toggle": "Cambiar tema", "theme.label": "Tema", "theme.system": "Automático", "theme.light": "Claro", "theme.dark": "Oscuro",
+    "add.button": "Añadir PDF", "add.choose": "Elegir PDF…", "add.drop_hint": "o arrastra los archivos aquí", "add.drop_active": "Suelta para añadir",
+    "add.note": "Los PDF y tus notas se guardan solo en este navegador. El análisis usa tu propia clave de Anthropic.", "add.only_pdf": "Solo se admiten archivos PDF.",
+    "empty.title": "Tu biblioteca está vacía", "empty.body": "Sube los artículos que vayas leyendo. Claude preparará el resumen, la cita y la sección del TFM donde encajan.",
+    "empty.filtered": "Ningún artículo coincide con la búsqueda o los filtros.", "empty.column": "Sin artículos todavía", "filter.clear": "Limpiar filtros",
+    "stats.total": "{n} artículos", "stats.total_one": "1 artículo",
+    "upload.panel_title": "Procesando {n} archivos", "upload.panel_title_one": "Procesando 1 archivo", "upload.parsing": "Leyendo el PDF…", "upload.saving": "Guardando…", "upload.analyzing": "Analizando con Claude…", "upload.done": "Listo", "upload.error": "Error", "upload.duplicate": "Ya estaba en la biblioteca", "upload.no_ai": "Guardado sin análisis (falta la clave de API)",
+    "card.thinking": "Analizando con Claude", "card.more": "más", "card.less": "menos", "card.open_pdf": "Abrir PDF", "card.added_on": "Añadido el {date}", "card.no_authors": "Autores desconocidos", "card.no_year": "s. f.", "card.no_title": "Sin título", "card.pending": "Pendiente de análisis", "card.needs_review": "Revisar", "card.translate": "Traducir resumen", "card.translating": "Traduciendo…", "card.analyze": "Analizar con Claude", "card.summary_missing": "Este artículo aún no tiene resumen. Pulsa «Analizar con Claude» o edita los metadatos a mano.",
+    "conclusion.label": "Conclusión principal", "citation.label": "Cita · {style}", "citation.copy": "Copiar cita", "citation.copied": "Copiado", "keywords.more": "+{n} más",
+    "chip.suggested": "Sugerido por Claude · toca para confirmar", "chip.confirmed": "Confirmado · toca para quitar", "chip.add": "Añadir sección", "chip.min_one": "Cada artículo necesita al menos una sección.", "chip.reset": "Volver a la sugerencia de Claude", "also_in": "también en:",
+    "notes.button": "Notas", "notes.title": "Notas", "notes.placeholder": "Escribe aquí tus ideas, críticas o cómo piensas usar este artículo…", "notes.saving": "Guardando…", "notes.saved": "Guardado", "notes.chars": "{n} caracteres",
+    "notes.prompt_1": "¿Qué aporta a mi TFM?", "notes.prompt_2": "¿Qué limitaciones tiene?", "notes.prompt_3": "¿Con qué otros artículos dialoga?",
+    "action.regenerate": "Regenerar análisis", "action.edit_meta": "Editar metadatos", "action.more": "Más opciones", "action.download": "Descargar PDF", "action.delete": "Eliminar", "action.cancel": "Cancelar", "action.save": "Guardar", "action.close": "Cerrar", "action.retry": "Reintentar", "action.open": "Abrir",
+    "confirm.delete_title": "¿Eliminar este artículo?", "confirm.delete_body": "Se borrarán el PDF, el análisis y tus notas de «{title}». Esta acción no se puede deshacer.",
+    "confirm.wipe_title": "¿Borrar toda la biblioteca?", "confirm.wipe_body": "Se eliminarán todos los artículos, PDF y notas de este navegador. Exporta una copia antes si quieres conservarlos.",
+    "edit.title": "Editar metadatos", "edit.type": "Tipo de documento", "edit.type.article": "Artículo de revista", "edit.type.book": "Libro", "edit.type.chapter": "Capítulo de libro", "edit.type.thesis": "Tesis", "edit.type.conference": "Ponencia / actas", "edit.type.report": "Informe", "edit.type.web": "Página web", "edit.type.other": "Otro",
+    "edit.paper_title": "Título", "edit.authors": "Autores", "edit.surname": "Apellidos", "edit.given": "Nombre", "edit.add_author": "Añadir autor", "edit.remove_author": "Quitar autor", "edit.year": "Año", "edit.container": "Revista / libro / actas", "edit.volume": "Volumen", "edit.issue": "Número", "edit.pages": "Páginas", "edit.publisher": "Editorial / institución", "edit.preview": "Vista previa de la cita", "edit.summary": "Resumen",
+    "reader.page_of": "{p} / {n}", "reader.prev": "Página anterior", "reader.next": "Página siguiente", "reader.zoom_in": "Ampliar", "reader.zoom_out": "Reducir", "reader.fit": "Ajustar",
+    "toast.copied": "Cita copiada al portapapeles", "toast.deleted": "Artículo eliminado", "toast.saved_meta": "Metadatos actualizados", "toast.regenerated": "Análisis actualizado", "toast.exported": "Copia exportada", "toast.imported": "Importados {n} artículos", "toast.bib_exported": "Bibliografía exportada", "toast.key_saved": "Clave guardada", "toast.translated": "Resumen traducido",
+    "error.analysis": "No se pudo analizar el PDF.", "error.no_text": "El PDF no contiene texto seleccionable (puede ser un escaneo). Edita los metadatos a mano.", "error.pdf": "No se pudo leer el PDF.", "error.copy": "No se pudo copiar.", "error.import": "El archivo de copia no es válido.", "error.no_key": "Añade tu clave de API en Ajustes para analizar con Claude.",
+    "error.api_key": "La clave de API no es válida.", "error.api_rate": "Demasiadas peticiones. Espera un minuto e inténtalo de nuevo.", "error.api_network": "Sin conexión con la API. Comprueba tu red.", "error.api_refused": "Claude no pudo procesar este documento.", "error.api_generic": "Error de la API: {msg}", "error.sdk": "No se pudo cargar el SDK de Anthropic. Comprueba tu conexión.", "error.api_billing": "La cuenta de Anthropic no tiene saldo o permisos. Revisa la facturación en console.anthropic.com.",
+    "section.intro": "Introducción", "section.intro.desc": "Contexto, problema y objetivos del trabajo.", "section.marco": "Marco teórico", "section.marco.desc": "Conceptos, teorías y estado de la cuestión.", "section.metodo": "Metodología", "section.metodo.desc": "Diseño, muestra, instrumentos y procedimiento.", "section.result": "Resultados", "section.result.desc": "Hallazgos y evidencias comparables.", "section.discus": "Discusión", "section.discus.desc": "Interpretación, contraste y limitaciones.", "section.concl": "Conclusiones", "section.concl.desc": "Aportaciones, implicaciones y líneas futuras.", "section.none": "Sin asignar", "section.none.desc": "Artículos sin sección todavía.",
+    "settings.title": "Ajustes", "settings.open": "Abrir ajustes", "settings.ai_title": "Análisis con Claude", "settings.ai_hint": "Crea una clave en console.anthropic.com (recomendado: con límite de gasto). Se guarda solo en este navegador y nunca sale de él salvo hacia la API de Anthropic.", "settings.show": "Mostrar", "settings.hide": "Ocultar", "settings.test": "Probar conexión", "settings.testing": "Probando…", "settings.test_ok": "Conexión correcta", "settings.model": "Modelo", "settings.model_hint": "Las traducciones usan siempre Claude Haiku 4.5.", "settings.appearance": "Apariencia", "settings.danger": "Zona de peligro", "settings.wipe": "Borrar toda la biblioteca", "settings.storage": "Almacenamiento usado: {used} de {quota}",
+    "backup.title": "Copia de seguridad", "backup.hint": "Tu biblioteca vive en este navegador. Exporta una copia para pasarla a otro dispositivo o protegerte si el navegador borra los datos.", "backup.include_pdf": "Incluir los PDF en la copia", "backup.export": "Exportar copia", "backup.import": "Importar copia", "backup.bib": "Exportar bibliografía", "backup.importing": "Importando…",
+    "banner.no_key": "Configura tu clave de API de Anthropic para que Claude analice los PDF.", "banner.backup": "Hace más de una semana que no guardas una copia de seguridad de tu biblioteca.",
+    "a11y.suggested_badge": "sugerida por Claude", "a11y.has_notes": "tiene notas", "a11y.analysis_done": "Análisis completado",
+    "demo.banner": "Modo demostración: el análisis es simulado.", "and": "y",
+  },
+  en: {
+    "brand.name": "Library", "search.placeholder": "Search by title, author or keyword…", "search.clear": "Clear search",
+    "view.label": "View", "view.grid": "Chronological", "view.sections": "By section", "sort.label": "Sort", "cite.label": "Citation style",
+    "sort.added_desc": "Newest first", "sort.added_asc": "Oldest first", "sort.year_desc": "Publication year ↓", "sort.year_asc": "Publication year ↑", "sort.title": "Title A–Z", "sort.author": "First author A–Z",
+    "cite.apa": "APA 7", "cite.mla": "MLA 9", "cite.chicago": "Chicago", "cite.harvard": "Harvard", "cite.ieee": "IEEE", "cite.vancouver": "Vancouver",
+    "lang.toggle": "Switch language", "theme.toggle": "Switch theme", "theme.label": "Theme", "theme.system": "Automatic", "theme.light": "Light", "theme.dark": "Dark",
+    "add.button": "Add PDF", "add.choose": "Choose PDF…", "add.drop_hint": "or drop files here", "add.drop_active": "Drop to add",
+    "add.note": "PDFs and notes are stored only in this browser. Analysis uses your own Anthropic API key.", "add.only_pdf": "Only PDF files are supported.",
+    "empty.title": "Your library is empty", "empty.body": "Upload the papers you read. Claude will prepare the summary, the citation and the dissertation section they fit.",
+    "empty.filtered": "No papers match the search or filters.", "empty.column": "No papers yet", "filter.clear": "Clear filters",
+    "stats.total": "{n} papers", "stats.total_one": "1 paper",
+    "upload.panel_title": "Processing {n} files", "upload.panel_title_one": "Processing 1 file", "upload.parsing": "Reading PDF…", "upload.saving": "Saving…", "upload.analyzing": "Analysing with Claude…", "upload.done": "Done", "upload.error": "Error", "upload.duplicate": "Already in the library", "upload.no_ai": "Saved without analysis (no API key)",
+    "card.thinking": "Analysing with Claude", "card.more": "more", "card.less": "less", "card.open_pdf": "Open PDF", "card.added_on": "Added {date}", "card.no_authors": "Unknown authors", "card.no_year": "n.d.", "card.no_title": "Untitled", "card.pending": "Awaiting analysis", "card.needs_review": "Review", "card.translate": "Translate summary", "card.translating": "Translating…", "card.analyze": "Analyse with Claude", "card.summary_missing": "This paper has no summary yet. Press “Analyse with Claude” or edit the metadata by hand.",
+    "conclusion.label": "Main conclusion", "citation.label": "Citation · {style}", "citation.copy": "Copy citation", "citation.copied": "Copied", "keywords.more": "+{n} more",
+    "chip.suggested": "Suggested by Claude · tap to confirm", "chip.confirmed": "Confirmed · tap to remove", "chip.add": "Add section", "chip.min_one": "Each paper needs at least one section.", "chip.reset": "Back to Claude's suggestion", "also_in": "also in:",
+    "notes.button": "Notes", "notes.title": "Notes", "notes.placeholder": "Write your ideas, critiques or how you plan to use this paper…", "notes.saving": "Saving…", "notes.saved": "Saved", "notes.chars": "{n} characters",
+    "notes.prompt_1": "What does it add to my thesis?", "notes.prompt_2": "What are its limitations?", "notes.prompt_3": "Which other papers does it speak to?",
+    "action.regenerate": "Regenerate analysis", "action.edit_meta": "Edit metadata", "action.more": "More options", "action.download": "Download PDF", "action.delete": "Delete", "action.cancel": "Cancel", "action.save": "Save", "action.close": "Close", "action.retry": "Retry", "action.open": "Open",
+    "confirm.delete_title": "Delete this paper?", "confirm.delete_body": "The PDF, analysis and your notes for “{title}” will be removed. This cannot be undone.",
+    "confirm.wipe_title": "Delete the whole library?", "confirm.wipe_body": "All papers, PDFs and notes in this browser will be removed. Export a backup first if you want to keep them.",
+    "edit.title": "Edit metadata", "edit.type": "Document type", "edit.type.article": "Journal article", "edit.type.book": "Book", "edit.type.chapter": "Book chapter", "edit.type.thesis": "Thesis", "edit.type.conference": "Conference paper", "edit.type.report": "Report", "edit.type.web": "Web page", "edit.type.other": "Other",
+    "edit.paper_title": "Title", "edit.authors": "Authors", "edit.surname": "Surname", "edit.given": "Given name", "edit.add_author": "Add author", "edit.remove_author": "Remove author", "edit.year": "Year", "edit.container": "Journal / book / proceedings", "edit.volume": "Volume", "edit.issue": "Issue", "edit.pages": "Pages", "edit.publisher": "Publisher / institution", "edit.preview": "Citation preview", "edit.summary": "Summary",
+    "reader.page_of": "{p} / {n}", "reader.prev": "Previous page", "reader.next": "Next page", "reader.zoom_in": "Zoom in", "reader.zoom_out": "Zoom out", "reader.fit": "Fit",
+    "toast.copied": "Citation copied to clipboard", "toast.deleted": "Paper deleted", "toast.saved_meta": "Metadata updated", "toast.regenerated": "Analysis updated", "toast.exported": "Backup exported", "toast.imported": "Imported {n} papers", "toast.bib_exported": "Bibliography exported", "toast.key_saved": "Key saved", "toast.translated": "Summary translated",
+    "error.analysis": "The PDF could not be analysed.", "error.no_text": "The PDF has no selectable text (it may be a scan). Edit the metadata by hand.", "error.pdf": "The PDF could not be read.", "error.copy": "Could not copy.", "error.import": "The backup file is not valid.", "error.no_key": "Add your API key in Settings to analyse with Claude.",
+    "error.api_key": "The API key is not valid.", "error.api_rate": "Too many requests. Wait a minute and try again.", "error.api_network": "Could not reach the API. Check your connection.", "error.api_refused": "Claude could not process this document.", "error.api_generic": "API error: {msg}", "error.sdk": "The Anthropic SDK could not be loaded. Check your connection.", "error.api_billing": "The Anthropic account has no credit or permission. Check billing at console.anthropic.com.",
+    "section.intro": "Introduction", "section.intro.desc": "Context, problem and aims of the study.", "section.marco": "Theoretical framework", "section.marco.desc": "Concepts, theories and state of the art.", "section.metodo": "Methodology", "section.metodo.desc": "Design, sample, instruments and procedure.", "section.result": "Results", "section.result.desc": "Comparable findings and evidence.", "section.discus": "Discussion", "section.discus.desc": "Interpretation, contrast and limitations.", "section.concl": "Conclusions", "section.concl.desc": "Contributions, implications and future work.", "section.none": "Unassigned", "section.none.desc": "Papers without a section yet.",
+    "settings.title": "Settings", "settings.open": "Open settings", "settings.ai_title": "Analysis with Claude", "settings.ai_hint": "Create a key at console.anthropic.com (recommended: with a spending limit). It is stored only in this browser and only ever sent to the Anthropic API.", "settings.show": "Show", "settings.hide": "Hide", "settings.test": "Test connection", "settings.testing": "Testing…", "settings.test_ok": "Connection OK", "settings.model": "Model", "settings.model_hint": "Translations always use Claude Haiku 4.5.", "settings.appearance": "Appearance", "settings.danger": "Danger zone", "settings.wipe": "Delete the whole library", "settings.storage": "Storage used: {used} of {quota}",
+    "backup.title": "Backup", "backup.hint": "Your library lives in this browser. Export a copy to move it to another device or to protect it if the browser clears its data.", "backup.include_pdf": "Include PDFs in the backup", "backup.export": "Export backup", "backup.import": "Import backup", "backup.bib": "Export bibliography", "backup.importing": "Importing…",
+    "banner.no_key": "Set your Anthropic API key so Claude can analyse the PDFs.", "banner.backup": "It has been more than a week since you last backed up your library.",
+    "a11y.suggested_badge": "suggested by Claude", "a11y.has_notes": "has notes", "a11y.analysis_done": "Analysis complete",
+    "demo.banner": "Demo mode: analysis is simulated.", "and": "and",
+  },
+};
+const t = (key, vars) => {
+  let s = (T[state.lang] && T[state.lang][key]) ?? T.es[key] ?? key;
+  if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, v);
+  return s;
+};
+function applyI18n(root = document) {
+  root.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+  root.querySelectorAll("[data-i18n-attr]").forEach(el => {
+    el.dataset.i18nAttr.split(";").forEach(pair => { const [attr, key] = pair.split(":"); if (attr && key) el.setAttribute(attr.trim(), t(key.trim())); });
+  });
+}
+
+/* =========================================================
+   3. STATE + INDEXEDDB
+   ========================================================= */
+const ls = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+const state = {
+  papers: new Map(),
+  lang: ls.get("tfm.lang", "es"),
+  citeStyle: ls.get("tfm.citeStyle", "apa"),
+  sort: ls.get("tfm.sort", "added_desc"),
+  view: ls.get("tfm.view", "grid"),
+  theme: ls.get("tfm.theme", "system"),
+  query: "", filters: new Set(), expanded: new Set(),
+  drawerId: null, jobs: [], settings: { apiKey: "", model: MODELS[0].id, lastBackupAt: 0, papersSinceBackup: 0 },
+  thumbUrls: new Map(), busy: new Set(),
+};
+
+const idb = {
+  db: null,
+  open() {
+    if (this.db) return Promise.resolve(this.db);
+    return new Promise((res, rej) => {
+      const req = indexedDB.open("tfm-library", 1);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains("papers")) db.createObjectStore("papers", { keyPath: "id" });
+        if (!db.objectStoreNames.contains("blobs")) db.createObjectStore("blobs", { keyPath: "id" });
+        if (!db.objectStoreNames.contains("settings")) db.createObjectStore("settings", { keyPath: "id" });
+      };
+      req.onsuccess = () => { this.db = req.result; res(this.db); };
+      req.onerror = () => rej(req.error);
+    });
+  },
+  async tx(store, mode, fn) {
+    const db = await this.open();
+    return new Promise((res, rej) => {
+      const tr = db.transaction(store, mode); const st = tr.objectStore(store);
+      const r = fn(st); let out;
+      if (r && "onsuccess" in r) { r.onsuccess = () => { out = r.result; }; r.onerror = () => rej(r.error); }
+      tr.oncomplete = () => res(out); tr.onerror = () => rej(tr.error); tr.onabort = () => rej(tr.error);
+    });
+  },
+  get(store, key) { return this.tx(store, "readonly", s => s.get(key)); },
+  all(store) { return this.tx(store, "readonly", s => s.getAll()); },
+  put(store, val) { return this.tx(store, "readwrite", s => s.put(val)); },
+  del(store, key) { return this.tx(store, "readwrite", s => s.delete(key)); },
+  clear(store) { return this.tx(store, "readwrite", s => s.clear()); },
+};
+
+async function savePaper(p) { p.updatedAt = new Date().toISOString(); state.papers.set(p.id, p); await idb.put("papers", p); }
+async function loadAll() {
+  const papers = await idb.all("papers");
+  papers.forEach(p => state.papers.set(p.id, p));
+  const s = await idb.get("settings", "app");
+  if (s) Object.assign(state.settings, s);
+}
+async function saveSettings() { await idb.put("settings", { id: "app", ...state.settings }); }
+async function getBlob(id) { const r = await idb.get("blobs", id); return r ? r.blob : null; }
+async function putBlob(id, kind, blob) { await idb.put("blobs", { id, kind, blob }); }
+async function thumbUrl(p) {
+  if (!p.hasThumb) return null;
+  if (state.thumbUrls.has(p.id)) return state.thumbUrls.get(p.id);
+  const b = await getBlob("thumb:" + p.id); if (!b) return null;
+  const u = URL.createObjectURL(b); state.thumbUrls.set(p.id, u); return u;
+}
+
+/* =========================================================
+   4. HELPERS
+   ========================================================= */
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : "id-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
+const norm = s => String(s ?? "").normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+const debounce = (fn, ms) => { let h; const d = (...a) => { clearTimeout(h); h = setTimeout(() => fn(...a), ms); }; d.flush = (...a) => { clearTimeout(h); fn(...a); }; return d; };
+const fmtDate = iso => { try { return new Intl.DateTimeFormat(state.lang === "es" ? "es-ES" : "en-GB", { day: "numeric", month: "short", year: "numeric" }).format(new Date(iso)); } catch { return ""; } };
+const fmtBytes = n => n > 1e9 ? (n / 1e9).toFixed(2) + " GB" : n > 1e6 ? (n / 1e6).toFixed(1) + " MB" : Math.round(n / 1e3) + " KB";
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const ICON = {
+  sparkle: '<svg class="ic sm chip__sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg>',
+  copy: '<svg class="ic sm" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
+  check: '<svg class="ic sm" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg>',
+  notes: '<svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M15 3v5h5M8 13h8M8 17h5"/></svg>',
+  refresh: '<svg class="ic" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/></svg>',
+  edit: '<svg class="ic" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 16z"/><path d="m13 7 4 4"/></svg>',
+  more: '<svg class="ic" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>',
+  trash: '<svg class="ic sm" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>',
+  download: '<svg class="ic sm" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>',
+  open: '<svg class="ic sm" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>',
+  file: '<svg class="ic" viewBox="0 0 24 24"><path d="M6 3h9l5 5v13H6zM14 3v6h6"/></svg>',
+  alert: '<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg>',
+  ok: '<svg class="ic" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg>',
+  translate: '<svg class="ic sm" viewBox="0 0 24 24"><path d="M4 5h8M8 3v2m3 0c-1 5-4 8-7 10M6 8c1 3 3 5 6 7M13 21l4-10 4 10M14.5 17h5"/></svg>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4 1.4-1.4"/>',
+  moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+  auto: '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/>',
+};
+
+function toast(msg, kind = "info", ms = 3200) {
+  const el = document.createElement("div");
+  el.className = "toast" + (kind === "error" ? " toast--error" : kind === "success" ? " toast--success" : "");
+  el.innerHTML = (kind === "error" ? ICON.alert : kind === "success" ? ICON.ok : ICON.file) + `<span>${esc(msg)}</span>`;
+  const region = $("#toasts"); region.appendChild(el);
+  while (region.children.length > 3) region.firstChild.remove();
+  setTimeout(() => { el.style.opacity = "0"; el.style.transition = "opacity 200ms"; setTimeout(() => el.remove(), 220); }, ms);
+}
+function announce(msg) { $("#liveRegion").textContent = msg; }
+
+function sectionLabel(k) { return t("section." + k); }
+function effectiveSections(p) {
+  if (Array.isArray(p.userSections)) return p.userSections.filter(k => SECTION_KEYS.includes(k));
+  const s = (p.suggestedSections || []).filter(x => x.score >= 0.5).slice(0, 2).map(x => x.key);
+  if (s.length) return s;
+  const top = (p.suggestedSections || [])[0]; return top ? [top.key] : [];
+}
+function otherSuggested(p) {
+  const eff = new Set(effectiveSections(p));
+  return (p.suggestedSections || []).filter(x => !eff.has(x.key) && x.score >= 0.35).slice(0, 2).map(x => x.key);
+}
+function paperTitle(p) { return (p.cite && p.cite.title) || p.fileName?.replace(/\.pdf$/i, "") || t("card.no_title"); }
+function authorsShort(p) {
+  const a = (p.cite?.authors || []).filter(x => x.family);
+  if (!a.length) return t("card.no_authors");
+  if (a.length === 1) return a[0].family;
+  if (a.length === 2) return `${a[0].family} ${state.lang === "es" ? "y" : "&"} ${a[1].family}`;
+  return `${a[0].family} et al.`;
+}
+function firstAuthorSort(p) { return norm((p.cite?.authors || [])[0]?.family || "￿"); }
+function summaryFor(p) { return p.summary?.[state.lang] || ""; }
+function conclusionFor(p) { return p.conclusion?.[state.lang] || ""; }
+function hasOtherLangSummary(p) { const o = state.lang === "es" ? "en" : "es"; return !!(p.summary?.[o]) && !p.summary?.[state.lang]; }
+
+/* =========================================================
+   5. PDF (pdf.js)
+   ========================================================= */
+function pdfjs() {
+  const lib = window.pdfjsLib; if (!lib) throw new Error("pdfjs-missing");
+  if (!lib.GlobalWorkerOptions.workerSrc) lib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.js`;
+  return lib;
+}
+async function openPdf(buf) {
+  const lib = pdfjs();
+  return lib.getDocument({ data: new Uint8Array(buf.slice(0)), cMapUrl: `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VERSION}/cmaps/`, cMapPacked: true, isEvalSupported: false }).promise;
+}
+async function sha256(buf) {
+  try { const h = await crypto.subtle.digest("SHA-256", buf); return [...new Uint8Array(h)].map(b => b.toString(16).padStart(2, "0")).join(""); }
+  catch { const u = new Uint8Array(buf); let h = 0; for (let i = 0; i < u.length; i += 97) h = (h * 31 + u[i]) >>> 0; return "weak-" + u.length + "-" + h.toString(16); }
+}
+async function renderPageToCanvas(page, widthPx, canvas) {
+  const base = page.getViewport({ scale: 1 });
+  const viewport = page.getViewport({ scale: widthPx / base.width });
+  canvas.width = Math.round(viewport.width); canvas.height = Math.round(viewport.height);
+  const ctx = canvas.getContext("2d", { alpha: false });
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // intent "print": renders without requestAnimationFrame pacing, so it completes even in a background tab.
+  await page.render({ canvasContext: ctx, viewport, intent: "print", annotationMode: pdfjs().AnnotationMode.ENABLE }).promise;
+  return canvas;
+}
+async function makeThumb(pdf) {
+  const page = await pdf.getPage(1);
+  const canvas = document.createElement("canvas");
+  await renderPageToCanvas(page, 600, canvas);
+  return new Promise(res => canvas.toBlob(b => res(b), "image/jpeg", 0.82));
+}
+async function extractExcerpt(pdf) {
+  const n = pdf.numPages;
+  const headPages = [...Array(Math.min(n, MAX_HEAD_PAGES)).keys()].map(i => i + 1);
+  const tailPages = n > MAX_HEAD_PAGES ? [...Array(Math.min(TAIL_PAGES, n - MAX_HEAD_PAGES)).keys()].map(i => n - TAIL_PAGES + 1 + i).filter(x => x > MAX_HEAD_PAGES) : [];
+  const readPage = async num => {
+    const page = await pdf.getPage(num);
+    const tc = await page.getTextContent();
+    let lines = [], cur = "";
+    for (const it of tc.items) { if (!("str" in it)) continue; cur += it.str; if (it.hasEOL) { lines.push(cur); cur = ""; } else if (it.str && !it.str.endsWith(" ")) cur += " "; }
+    if (cur.trim()) lines.push(cur);
+    let noteText = [];
+    try { const anns = await page.getAnnotations(); noteText = anns.filter(a => (a.subtype === "FreeText" || a.subtype === "Text") && a.contents).map(a => a.contents.trim()).filter(Boolean); } catch {}
+    return { lines: lines.map(l => l.replace(/\s+/g, " ").trim()).filter(Boolean), noteText };
+  };
+  const pages = {}; const notes = new Set();
+  for (const num of [...headPages, ...tailPages]) { const r = await readPage(num); pages[num] = r.lines; r.noteText.forEach(x => notes.add(x)); await sleep(0); }
+  const counts = new Map();
+  Object.values(pages).forEach(lines => new Set(lines.filter(l => l.length < 120).map(norm)).forEach(k => counts.set(k, (counts.get(k) || 0) + 1)));
+  const isHeader = l => l.length < 120 && (counts.get(norm(l)) || 0) >= 3 && Object.keys(pages).length >= 3;
+  const joinPages = nums => nums.map(num => (pages[num] || []).filter(l => !isHeader(l)).join("\n")).join("\n\n");
+  let head = joinPages(headPages), tail = joinPages(tailPages);
+  for (const nt of notes) { if (nt.length > 3) { head = head.split(nt).join(" "); tail = tail.split(nt).join(" "); } }
+  head = head.replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim(); tail = tail.replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
+  const total = head.length + tail.length;
+  // Prefer the conclusions over the reference list: cut the tail where the bibliography starts and begin it at a conclusions heading when one exists.
+  const trimTail = txt => {
+    // Small-caps headings come out of pdf.js as "B IBLIOGRAFÍA" / "C ONCLUSIONES", hence the optional space after the first letter.
+    const bib = txt.search(/\n\s*(?:\d+\.?\s*)?(?:B\s?IBLIOGRAF[ÍI]A|R\s?EFERENCIAS(?: BIBLIOGR[ÁA]FICAS)?|R\s?EFERENCES|B\s?IBLIOGRAPHY|W\s?ORKS CITED|L\s?ITERATURE CITED)\s*\n/i);
+    if (bib > 400) txt = txt.slice(0, bib);
+    const conc = txt.search(/\n\s*(?:\d+\.?\s*)?(?:C\s?ONCLUSION(?:ES|S)?(?: GENERALES| Y RECOMENDACIONES| AND RECOMMENDATIONS)?|C\s?ONSIDERACIONES FINALES|C\s?ONCLUDING REMARKS|D\s?ISCUSSION AND CONCLUSIONS?)\b/i);
+    if (conc >= 0 && txt.length - conc > 300) txt = txt.slice(conc);
+    return txt.slice(-TAIL_CHARS);
+  };
+  let excerpt;
+  if (!tail) excerpt = head.length > HEAD_CHARS + TAIL_CHARS ? head.slice(0, HEAD_CHARS) + "\n[...]\n" + trimTail(head.slice(HEAD_CHARS)) : head;
+  else excerpt = head.slice(0, HEAD_CHARS) + "\n[...]\n" + trimTail(tail);
+  return { excerpt, chars: total };
+}
+
+/* =========================================================
+   6. AI (Anthropic API via official SDK)
+   ========================================================= */
+let sdkPromise = null;
+async function getClient() {
+  if (!state.settings.apiKey) throw { code: "no_key" };
+  if (!sdkPromise) sdkPromise = import(SDK_URL).then(m => m.default).catch(e => { sdkPromise = null; throw { code: "sdk", cause: e }; });
+  const Anthropic = await sdkPromise;
+  return new Anthropic({ apiKey: state.settings.apiKey, dangerouslyAllowBrowser: true, maxRetries: 1, timeout: 240000 });
+}
+const ANALYSIS_SCHEMA = {
+  type: "object", additionalProperties: false,
+  required: ["type", "paperLanguage", "cite", "summary", "mainConclusion", "keywords", "sectionFit", "citeConfidence"],
+  properties: {
+    type: { type: "string", enum: DOC_TYPES },
+    paperLanguage: { type: "string", enum: ["es", "en", "other"] },
+    cite: {
+      type: "object", additionalProperties: false,
+      required: ["authors", "year", "title", "container", "volume", "issue", "pages", "doi", "url", "publisher", "edition", "place"],
+      properties: {
+        authors: { type: "array", items: { type: "object", additionalProperties: false, required: ["family", "given"], properties: { family: { type: "string" }, given: { type: "string" } } } },
+        year: { type: "string" }, title: { type: "string" }, container: { type: "string" }, volume: { type: "string" }, issue: { type: "string" }, pages: { type: "string" },
+        doi: { type: "string" }, url: { type: "string" }, publisher: { type: "string" }, edition: { type: "string" }, place: { type: "string" },
+      },
+    },
+    summary: { type: "string" }, mainConclusion: { type: "string" },
+    keywords: { type: "array", items: { type: "string" } },
+    sectionFit: { type: "array", items: { type: "object", additionalProperties: false, required: ["section", "score", "why"], properties: { section: { type: "string", enum: SECTION_KEYS }, score: { type: "number" }, why: { type: "string" } } } },
+    citeConfidence: { type: "number" },
+  },
+};
+const TRANSLATE_SCHEMA = { type: "object", additionalProperties: false, required: ["summary", "mainConclusion"], properties: { summary: { type: "string" }, mainConclusion: { type: "string" } } };
+
+function analysisSystemPrompt(lang) {
+  const outLang = lang === "es" ? "Spanish (Spain)" : "English";
+  return `You are a research assistant helping a master's student in Spain organise the bibliography of her dissertation (Trabajo de Fin de Máster, TFM).
+
+You will receive an EXCERPT (beginning and end) of the printed text of an academic document, extracted automatically from a PDF. The PDF was annotated by hand on a tablet. IGNORE completely anything that looks like a reader's note rather than the authors' text: handwritten notes, marginal comments, highlights, underlining, isolated words such as "importante", "ver", "ojo", "?" or "!!". Base everything ONLY on the document's own printed content. Extraction artefacts (broken words, hyphenation, page numbers, running headers) are normal; read through them.
+
+Write "summary" and "mainConclusion" in ${outLang}, in a clear academic register.
+- summary: 2 to 4 sentences. What the document is about, its purpose and its approach or method.
+- mainConclusion: 1 or 2 sentences. The main finding, thesis or conclusion the authors reach.
+Keep "cite.title" exactly in its original language and casing (sentence case as printed). Extract citation fields from the document itself (title page, headers, footers, first-page footnotes, journal name, volume, year, pages). Use "" for anything you cannot find. NEVER invent DOIs, volumes, issues, pages or URLs. Give author names as printed: "family" = surname(s) (Spanish authors often have two surnames; keep both in "family"), "given" = given name(s) or initials. "keywords": 4 to 7 short topic keywords in ${outLang}.
+
+Score how useful this document is FOR EACH of the six sections of the student's dissertation (0.0 = not useful, 1.0 = ideal), with a one-sentence "why" in ${outLang}. Include all six sections, sorted by score descending. Definitions:
+- intro: context, motivation, relevance of the topic, problem statement, background facts and figures.
+- marco: theoretical framework / literature review — definitions, theories, models, legal or conceptual background, prior findings.
+- metodo: research designs, instruments, samples, data sources, analysis techniques the student could adopt or cite.
+- result: empirical findings, data, tables, statistics that could be compared with the student's own results.
+- discus: interpretations, debates, contrasting positions, limitations, critical perspectives.
+- concl: implications, recommendations, policy proposals, future lines of research.
+
+"citeConfidence": 0.0 to 1.0, how confident you are that the citation fields are complete and correct.
+Reply with the JSON object only.`;
+}
+function analysisUserPrompt(p) {
+  const hint = p.pdfMeta ? `PDF metadata hint (may be wrong or empty): ${JSON.stringify(p.pdfMeta)}` : "";
+  return `File name: ${p.fileName}\nPages: ${p.pageCount}\n${hint}\n\n=== EXCERPT START ===\n${p.textExcerpt}\n=== EXCERPT END ===`;
+}
+function buildParams(model, system, user, schema, maxTokens) {
+  const params = { model, max_tokens: maxTokens, system, messages: [{ role: "user", content: user }] };
+  if (schema) params.output_config = { format: { type: "json_schema", schema } };
+  if (!/haiku/.test(model)) { params.thinking = { type: "adaptive" }; params.output_config = { ...(params.output_config || {}), effort: "medium" }; }
+  return params;
+}
+function tolerantJson(text) {
+  try { return JSON.parse(text); } catch {}
+  const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/); if (fence) { try { return JSON.parse(fence[1]); } catch {} }
+  const a = text.indexOf("{"), b = text.lastIndexOf("}"); if (a >= 0 && b > a) { try { return JSON.parse(text.slice(a, b + 1)); } catch {} }
+  throw { code: "invalid_json", text };
+}
+async function callJson(model, system, user, schema, maxTokens) {
+  const client = await getClient();
+  let resp;
+  try { resp = await client.messages.create(buildParams(model, system, user, schema, maxTokens)); }
+  catch (e) {
+    if (e && e.status === 400 && /output_config|format|schema|json_schema/i.test(String(e.message))) {
+      resp = await client.messages.create(buildParams(model, system + "\n\nReply with ONLY a single JSON object, no prose, no code fence.", user, null, maxTokens));
+    } else throw e;
+  }
+  if (resp.stop_reason === "refusal") throw { code: "refused" };
+  const text = (resp.content || []).filter(b => b.type === "text").map(b => b.text).join("");
+  if (!text.trim()) throw { code: "empty" };
+  return tolerantJson(text);
+}
+function mapApiError(e) {
+  if (!e) return t("error.api_generic", { msg: "?" });
+  if (e.code === "no_key") return t("error.no_key");
+  if (e.code === "sdk") return t("error.sdk");
+  if (e.code === "refused") return t("error.api_refused");
+  if (e.code === "invalid_json" || e.code === "empty") return t("error.analysis");
+  if (e.code === "no_text") return t("error.no_text");
+  const s = e.status;
+  if (s === 401 || s === 403) return t("error.api_key");
+  if (s === 402) return t("error.api_billing");
+  if (s === 429) return t("error.api_rate");
+  if (s === 400 && /credit|billing|balance/i.test(String(e.message))) return t("error.api_billing");
+  if (e.name === "APIConnectionError" || /fetch|network|Failed to fetch|Connection error/i.test(String(e.message))) return t("error.api_network");
+  return t("error.api_generic", { msg: (e.message || String(e)).slice(0, 140) });
+}
+function normalizeAnalysis(raw) {
+  const str = (v, max = 400) => (typeof v === "string" ? v : v == null ? "" : String(v)).trim().slice(0, max);
+  const out = {};
+  out.type = DOC_TYPES.includes(raw.type) ? raw.type : "article";
+  out.paperLanguage = ["es", "en", "other"].includes(raw.paperLanguage) ? raw.paperLanguage : "other";
+  const c = raw.cite || {};
+  out.cite = {
+    authors: Array.isArray(c.authors) ? c.authors.filter(a => a && (a.family || a.given)).map(a => ({ family: str(a.family, 120), given: str(a.given, 120) })).slice(0, 40) : [],
+    year: str(c.year, 12).replace(/[^\d\w–-]/g, ""), title: str(c.title, 500), container: str(c.container, 300), volume: str(c.volume, 20), issue: str(c.issue, 20),
+    pages: str(c.pages, 30), doi: str(c.doi, 120).replace(/^https?:\/\/(dx\.)?doi\.org\//i, ""), url: str(c.url, 300), publisher: str(c.publisher, 200), edition: str(c.edition, 40), place: str(c.place, 80),
+  };
+  out.summary = str(raw.summary, 1500); out.mainConclusion = str(raw.mainConclusion, 800);
+  out.keywords = Array.isArray(raw.keywords) ? raw.keywords.map(k => str(k, 40)).filter(Boolean).slice(0, 8) : [];
+  const seen = new Set();
+  out.sectionFit = (Array.isArray(raw.sectionFit) ? raw.sectionFit : []).filter(s => s && SECTION_KEYS.includes(s.section) && !seen.has(s.section) && seen.add(s.section))
+    .map(s => ({ key: s.section, score: Math.max(0, Math.min(1, Number(s.score) || 0)), why: str(s.why, 200) })).sort((a, b) => b.score - a.score);
+  out.citeConfidence = Math.max(0, Math.min(1, Number(raw.citeConfidence) || 0));
+  return out;
+}
+function demoAnalysis(p) {
+  const lines = (p.textExcerpt || "").split("\n").map(s => s.trim()).filter(s => s.length > 8);
+  const title = lines[0] ? lines.slice(0, 2).join(" ").slice(0, 140) : p.fileName;
+  const es = state.lang === "es";
+  return {
+    type: "article", paperLanguage: "es",
+    cite: { authors: [{ family: "Autora Demo", given: "A." }, { family: "Coautor", given: "B." }], year: "2024", title, container: "Revista de Demostración", volume: "12", issue: "3", pages: "45–67", doi: "", url: "", publisher: "", edition: "", place: "" },
+    summary: es ? "Resumen simulado (modo demostración). El documento aborda el tema principal identificado en las primeras páginas y presenta su enfoque y método de forma sintética. Sirve para comprobar el diseño de la tarjeta sin gastar créditos de la API." : "Simulated summary (demo mode). The document addresses the main topic identified in the first pages and presents its approach and method concisely. It exists to check the card design without spending API credits.",
+    mainConclusion: es ? "Conclusión simulada: los autores defienden que el fenómeno analizado exige adaptar el marco vigente." : "Simulated conclusion: the authors argue that the phenomenon studied requires adapting the current framework.",
+    keywords: es ? ["demostración", "fiscalidad", "comercio electrónico", "marco teórico"] : ["demo", "taxation", "e-commerce", "framework"],
+    sectionFit: [{ section: "marco", score: 0.9, why: "Demo" }, { section: "intro", score: 0.7, why: "Demo" }, { section: "discus", score: 0.4, why: "Demo" }, { section: "concl", score: 0.3, why: "Demo" }, { section: "metodo", score: 0.1, why: "Demo" }, { section: "result", score: 0.1, why: "Demo" }],
+    citeConfidence: 0.5,
+  };
+}
+async function analyzePaper(id, { regenerate = false } = {}) {
+  const p = state.papers.get(id); if (!p || state.busy.has(id)) return;
+  if (!p.textExcerpt || p.textExcerpt.length < 200) { p.analysisStatus = "needs_review"; p.analysisError = "no_text"; await savePaper(p); render(); return; }
+  state.busy.add(id); p.analysisStatus = "analyzing"; p.analysisError = null; await savePaper(p); renderCard(id);
+  try {
+    let raw;
+    if (DEMO) { await sleep(1400); raw = demoAnalysis(p); }
+    else raw = await callJson(state.settings.model, analysisSystemPrompt(state.lang), analysisUserPrompt(p), ANALYSIS_SCHEMA, 4000);
+    const a = normalizeAnalysis(raw);
+    // Hand-edited citation fields survive Regenerate; the AI fills them only if she never edited them (or left the title empty).
+    if (!p.citeEdited || !p.cite?.title) { p.cite = a.cite; p.type = a.type; }
+    p.paperLanguage = a.paperLanguage;
+    p.summary = { ...(p.summary || {}), [state.lang]: a.summary }; p.conclusion = { ...(p.conclusion || {}), [state.lang]: a.mainConclusion };
+    if (regenerate) { const o = state.lang === "es" ? "en" : "es"; p.summary[o] = ""; p.conclusion[o] = ""; }
+    p.keywords = a.keywords; p.suggestedSections = a.sectionFit; p.citeConfidence = a.citeConfidence;
+    p.analysisStatus = "ready"; p.analyzedAt = new Date().toISOString(); p.analysisLang = state.lang; p.analysisError = null;
+    await savePaper(p); announce(t("a11y.analysis_done"));
+    if (regenerate) toast(t("toast.regenerated"), "success");
+  } catch (e) {
+    console.error("analysis failed", e);
+    p.analysisStatus = "needs_review"; p.analysisError = mapApiError(e); await savePaper(p);
+    toast(p.analysisError, "error", 5000);
+  } finally { state.busy.delete(id); render(); }
+}
+async function translatePaper(id) {
+  const p = state.papers.get(id); if (!p || state.busy.has(id)) return;
+  const from = state.lang === "es" ? "en" : "es", to = state.lang;
+  if (!p.summary?.[from]) return;
+  state.busy.add(id); renderCard(id);
+  try {
+    let raw;
+    if (DEMO) { await sleep(800); raw = { summary: "[demo] " + p.summary[from], mainConclusion: "[demo] " + (p.conclusion?.[from] || "") }; }
+    else raw = await callJson(TRANSLATE_MODEL, `Translate the following academic summary and conclusion into ${to === "es" ? "Spanish (Spain)" : "English"}. Keep the meaning exact and the register academic. Reply with the JSON object only.`,
+      JSON.stringify({ summary: p.summary[from], mainConclusion: p.conclusion?.[from] || "" }), TRANSLATE_SCHEMA, 1500);
+    p.summary[to] = String(raw.summary || "").slice(0, 1500); p.conclusion = p.conclusion || {}; p.conclusion[to] = String(raw.mainConclusion || "").slice(0, 800);
+    await savePaper(p); toast(t("toast.translated"), "success");
+  } catch (e) { console.error(e); toast(mapApiError(e), "error", 5000); }
+  finally { state.busy.delete(id); render(); }
+}
+async function testConnection() {
+  const client = await getClient();
+  const r = await client.messages.create({ model: TRANSLATE_MODEL, max_tokens: 10, messages: [{ role: "user", content: "Reply with the single word OK." }] });
+  return (r.content || []).some(b => b.type === "text");
+}
+
+/* =========================================================
+   7. CITATIONS
+   ========================================================= */
+const ini = g => (g || "").split(/[\s.-]+/).filter(Boolean).map(w => w[0].toUpperCase() + ".").join(" ");
+const nInv = a => [a.family, ini(a.given)].filter(Boolean).join(", ");             // Family, G. M.
+const nInvFull = a => [a.family, a.given].filter(Boolean).join(", ");             // Family, Given
+const nNat = a => [a.given, a.family].filter(Boolean).join(" ");                  // Given Family
+const nIni = a => [ini(a.given), a.family].filter(Boolean).join(" ");             // G. M. Family
+const nVan = a => (a.family + " " + (a.given || "").split(/[\s.-]+/).filter(Boolean).map(w => w[0].toUpperCase()).join("")).trim(); // Family GM
+const joinParts = (parts, sep = " ") => parts.filter(x => x && String(x).trim()).join(sep);
+const endDot = s => s && !/[.?!]$/.test(s) ? s + "." : s;
+const it = s => s ? `<i>${esc(s)}</i>` : "";
+function doiUrl(c) { if (c.doi) return "https://doi.org/" + c.doi; return c.url || ""; }
+function yearOr(c, lang) { return c.year || (lang === "es" ? "s. f." : "n.d."); }
+function authorsApa(authors, lang) {
+  const names = authors.map(nInv); const conj = lang === "es" ? "y" : "&";
+  if (!names.length) return ""; if (names.length === 1) return names[0];
+  if (names.length <= 20) return lang === "es" ? names.slice(0, -1).join(", ") + " y " + names.at(-1) : names.slice(0, -1).join(", ") + ", & " + names.at(-1);
+  return names.slice(0, 19).join(", ") + ", . . . " + names.at(-1);
+}
+function authorsMla(authors) {
+  if (!authors.length) return ""; if (authors.length === 1) return nInvFull(authors[0]);
+  if (authors.length === 2) return `${nInvFull(authors[0])}, and ${nNat(authors[1])}`;
+  return `${nInvFull(authors[0])}, et al`;
+}
+function authorsChicago(authors, lang) {
+  const conj = lang === "es" ? "y" : "and";
+  if (!authors.length) return ""; if (authors.length === 1) return nInvFull(authors[0]);
+  if (authors.length > 10) return authors.slice(0, 7).map((a, i) => i ? nNat(a) : nInvFull(a)).join(", ") + ", et al";
+  const names = authors.map((a, i) => i ? nNat(a) : nInvFull(a));
+  return names.slice(0, -1).join(", ") + `, ${conj} ` + names.at(-1);
+}
+function authorsHarvard(authors, lang) {
+  const conj = lang === "es" ? "y" : "and"; const names = authors.map(nInv);
+  if (!names.length) return ""; if (names.length === 1) return names[0];
+  if (names.length > 3) return names[0] + " et al.";
+  return names.slice(0, -1).join(", ") + ` ${conj} ` + names.at(-1);
+}
+function authorsIeee(authors) {
+  const names = authors.map(nIni); if (!names.length) return ""; if (names.length === 1) return names[0];
+  if (names.length > 6) return names[0] + " et al.";
+  return names.slice(0, -1).join(", ") + (names.length > 2 ? "," : "") + " and " + names.at(-1);
+}
+function authorsVan(authors) {
+  const names = authors.map(nVan); if (!names.length) return "";
+  if (names.length > 6) return names.slice(0, 6).join(", ") + ", et al";
+  return names.join(", ");
+}
+function volIssue(c, fmt) {
+  if (fmt === "apa") return joinParts([c.volume ? it(c.volume) : "", c.issue ? `(${esc(c.issue)})` : ""], "");
+  return joinParts([c.volume, c.issue ? `(${c.issue})` : ""], "");
+}
+function formatCitation(p, style, lang, num = 1) {
+  const c = { ...(p.cite || {}) }; const authors = (c.authors || []).filter(a => a.family || a.given);
+  const type = p.type || "article"; const y = yearOr(c, lang); const link = doiUrl(c); const inWord = lang === "es" ? "En" : "In";
+  const tt = esc(c.title || paperTitle(p)); const cont = c.container ? c.container : ""; const pub = c.publisher || "";
+  const pages = c.pages ? c.pages.replace(/-/g, "–") : "";
+  let s = "";
+  const itTitle = it(c.title || paperTitle(p));
+  const placePub = joinParts([esc(c.place), esc(pub)], ": ");
+  switch (style) {
+    case "apa": {
+      const au = esc(authorsApa(authors, lang));
+      // No author: the title moves to the author position (APA 7 §9.12).
+      const lead = au ? [endDot(au), `(${y}).`] : null;
+      if (type === "article" || type === "conference") s = joinParts([...(lead || [endDot(tt), `(${y}).`]), lead ? endDot(tt) : "", joinParts([it(cont), volIssue(c, "apa"), esc(pages)], ", ") + ".", esc(link)]);
+      else if (type === "chapter") s = joinParts([...(lead || [endDot(tt), `(${y}).`]), lead ? endDot(tt) : "", `${inWord} ${joinParts([it(cont), pages ? `(pp. ${esc(pages)})` : ""])}.`, pub && endDot(esc(pub)), esc(link)]);
+      else if (type === "thesis") s = joinParts([...(lead || [endDot(itTitle), `(${y}).`]), lead ? itTitle : "", `[${lang === "es" ? "Trabajo de fin de máster" : "Master's thesis"}${pub ? ", " + esc(pub) : ""}].`, esc(link)]);
+      else if (type === "web") s = joinParts([...(lead || [endDot(itTitle), `(${y}).`]), lead ? endDot(itTitle) : "", (cont || pub) && endDot(esc(cont || pub)), esc(link)]);
+      else s = joinParts([...(lead || [endDot(itTitle), `(${y}).`]), lead ? endDot(itTitle + (c.edition ? ` (${esc(c.edition)})` : "")) : "", pub && endDot(esc(pub)), esc(link)]);
+      break;
+    }
+    case "mla": {
+      const au = esc(authorsMla(authors));
+      if (type === "article" || type === "conference") s = joinParts([au && endDot(au), `“${tt}.”`, joinParts([it(cont), c.volume ? "vol. " + esc(c.volume) : "", c.issue ? "no. " + esc(c.issue) : "", esc(c.year), pages ? "pp. " + esc(pages) : "", c.doi ? "https://doi.org/" + esc(c.doi) : esc(c.url)], ", ") + "."]);
+      else if (type === "chapter") s = joinParts([au && endDot(au), `“${tt}.”`, joinParts([it(cont), esc(pub), esc(c.year), pages ? "pp. " + esc(pages) : ""], ", ") + ".", esc(link)]);
+      else s = joinParts([au && endDot(au), endDot(itTitle), joinParts([esc(pub || cont), esc(c.year)], ", ") + ".", esc(link)]);
+      break;
+    }
+    case "chicago": {
+      const au = esc(authorsChicago(authors, lang));
+      const lead = au ? [endDot(au), `${y}.`] : [endDot(type === "article" || type === "conference" || type === "chapter" ? `“${tt}”` : itTitle), `${y}.`];
+      if (type === "article" || type === "conference") s = joinParts([...lead, au ? `“${tt}.”` : "", joinParts([it(cont), esc(c.volume)]) + (c.issue ? ` (${esc(c.issue)})` : "") + (pages ? ": " + esc(pages) : "") + ".", esc(link)]);
+      else if (type === "chapter") s = joinParts([...lead, au ? `“${tt}.”` : "", `${inWord} ${it(cont)}${pages ? ", " + esc(pages) : ""}.`, placePub && placePub + "."]);
+      else s = joinParts([...lead, au ? endDot(itTitle) : "", placePub && placePub + ".", esc(link)]);
+      break;
+    }
+    case "harvard": {
+      const au = esc(authorsHarvard(authors, lang));
+      const avail = c.doi ? "doi:" + esc(c.doi) + "." : c.url ? `${lang === "es" ? "Disponible en" : "Available at"}: ${esc(c.url)}.` : "";
+      if (type === "article" || type === "conference") s = joinParts([au || `‘${tt}’`, `(${y})`, au ? `‘${tt}’,` : "", joinParts([it(cont), esc(volIssue(c, "h")), pages ? "pp. " + esc(pages) : ""], ", ") + ".", avail]);
+      else if (type === "chapter") s = joinParts([au || `‘${tt}’`, `(${y})`, au ? `‘${tt}’,` : "", `${lang === "es" ? "en" : "in"} ${it(cont)}.`, placePub + (pages ? ", pp. " + esc(pages) : "") + ".", avail]);
+      else s = joinParts([au || itTitle, `(${y})`, au ? endDot(itTitle) : "", placePub && placePub + ".", avail]);
+      break;
+    }
+    case "ieee": {
+      const au = esc(authorsIeee(authors));
+      if (type === "article" || type === "conference") s = `[${num}] ` + joinParts([au && au + ",", `“${tt},”`, joinParts([it(cont), c.volume ? "vol. " + esc(c.volume) : "", c.issue ? "no. " + esc(c.issue) : "", pages ? "pp. " + esc(pages) : "", esc(c.year)], ", ") + ".", c.doi ? "doi: " + esc(c.doi) + "." : ""]);
+      else if (type === "chapter") s = `[${num}] ` + joinParts([au && au + ",", `“${tt},”`, `in ${it(cont)},`, joinParts([placePub, esc(c.year), pages ? "pp. " + esc(pages) : ""], ", ") + ".", esc(link)]);
+      else s = `[${num}] ` + joinParts([au && au + ",", itTitle + (c.edition ? ", " + esc(c.edition) : "") + ".", joinParts([placePub, esc(c.year)], ", ") + ".", esc(link)]);
+      break;
+    }
+    case "vancouver": {
+      const au = esc(authorsVan(authors));
+      const yv = joinParts([esc(c.year), esc(c.volume)], ";") + (c.issue ? "(" + esc(c.issue) + ")" : "") + (pages ? ":" + esc(pages) : "");
+      if (type === "article" || type === "conference") s = `${num}. ` + joinParts([au && endDot(au), endDot(tt), endDot(esc(cont)), yv && yv + ".", c.doi ? "doi:" + esc(c.doi) : ""]);
+      else if (type === "chapter") s = `${num}. ` + joinParts([au && endDot(au), endDot(tt), `In: ${endDot(esc(cont))}`, placePub + (c.year ? "; " + esc(c.year) : "") + ".", pages ? "p. " + esc(pages) + "." : "", esc(link)]);
+      else s = `${num}. ` + joinParts([au && endDot(au), endDot(tt), c.edition ? endDot(esc(c.edition)) : "", placePub + (c.year ? "; " + esc(c.year) : "") + ".", esc(link)]);
+      break;
+    }
+  }
+  return s.replace(/\s+([.,;:])/g, "$1").replace(/\.\.+/g, ".").replace(/\s{2,}/g, " ").trim();
+}
+const citationText = html => { const d = document.createElement("div"); d.innerHTML = html; return d.textContent; };
+
+/* =========================================================
+   8. RENDER
+   ========================================================= */
+function visiblePapers() {
+  let list = [...state.papers.values()];
+  const q = norm(state.query.trim());
+  if (q) list = list.filter(p => norm([paperTitle(p), ...(p.cite?.authors || []).map(a => a.family + " " + a.given), p.cite?.container, p.cite?.year, ...(p.keywords || []), summaryFor(p), conclusionFor(p), p.notes].join(" ")).includes(q));
+  if (state.filters.size) list = list.filter(p => effectiveSections(p).some(k => state.filters.has(k)));
+  const yr = p => parseInt(p.cite?.year) || 0;
+  const cmp = {
+    added_desc: (a, b) => b.createdAt.localeCompare(a.createdAt), added_asc: (a, b) => a.createdAt.localeCompare(b.createdAt),
+    year_desc: (a, b) => yr(b) - yr(a) || b.createdAt.localeCompare(a.createdAt), year_asc: (a, b) => (yr(a) || 9999) - (yr(b) || 9999) || a.createdAt.localeCompare(b.createdAt),
+    title: (a, b) => norm(paperTitle(a)).localeCompare(norm(paperTitle(b))), author: (a, b) => firstAuthorSort(a).localeCompare(firstAuthorSort(b)),
+  }[state.sort] || ((a, b) => 0);
+  return list.sort(cmp);
+}
+function chipHTML(key, filled, extra = "") {
+  const label = sectionLabel(key);
+  return `<button type="button" class="chip chip--section chip--${key} ${filled ? "is-filled" : ""}" data-chip="${key}" aria-pressed="${filled}" title="${esc(filled ? t("chip.confirmed") : t("chip.suggested"))}" ${extra}>${filled ? "" : ICON.sparkle}${esc(label)}${filled ? "" : `<span class="sr-only"> (${esc(t("a11y.suggested_badge"))})</span>`}</button>`;
+}
+function cardHTML(p, { compact = false, listIndex = 1, inSection = null } = {}) {
+  const eff = effectiveSections(p), sugg = otherSuggested(p);
+  const title = paperTitle(p); const busy = state.busy.has(p.id);
+  const analyzing = busy && p.analysisStatus === "analyzing";
+  const status = p.analysisStatus;
+  const cls = ["card", compact ? "card--compact" : "", status === "needs_review" || status === "error" ? "card--error" : ""].filter(Boolean).join(" ");
+  const meta = `<div class="card__meta">${esc(authorsShort(p))} · <b>${esc(p.cite?.year || t("card.no_year"))}</b>${p.cite?.container ? " · " + esc(p.cite.container) : ""}</div>`;
+  const thumb = `<button type="button" class="card__thumb" data-act="open" aria-label="${esc(t("card.open_pdf"))}"><img data-thumb="${p.id}" alt="" hidden><span class="card__thumb-placeholder" data-thumb-ph="${p.id}">${ICON.file}</span><span class="card__thumb-overlay"><span>${esc(t("card.open_pdf"))}</span></span></button>`;
+  if (compact) {
+    const also = eff.filter(k => k !== inSection);
+    return `<article class="${cls}" data-id="${p.id}">
+      <div class="card__body">${thumb}<div class="card__main">
+        <h3 class="card__title" data-act="detail" tabindex="0">${esc(title)}</h3>${meta}
+        ${also.length ? `<div class="tag--also">${esc(t("also_in"))} ${also.map(k => `<b style="color:var(--sec-${k}-ink)">${esc(sectionLabel(k))}</b>`).join(" · ")}</div>` : ""}
+      </div></div>
+      <div class="card__footer"><span class="card__date">${esc(fmtDate(p.createdAt))}</span><div class="card__actions">
+        <button type="button" class="btn btn--icon ${p.notes ? "is-on" : ""}" data-act="notes" aria-label="${esc(t("notes.button"))}">${ICON.notes}${p.notes ? '<span class="dot"></span>' : ""}</button>
+        <button type="button" class="btn btn--icon" data-act="detail" aria-label="${esc(t("action.open"))}">${ICON.open}</button>
+      </div></div></article>`;
+  }
+  const chips = [...eff.map(k => chipHTML(k, true)), ...sugg.map(k => chipHTML(k, false)),
+    `<button type="button" class="chip chip--add" data-act="addsection" aria-label="${esc(t("chip.add"))}"><svg class="ic sm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>`,
+    Array.isArray(p.userSections) && p.suggestedSections?.length ? `<button type="button" class="chip chip--add" data-act="resetsections" title="${esc(t("chip.reset"))}" aria-label="${esc(t("chip.reset"))}">${ICON.sparkle}</button>` : ""].join("");
+  const summary = summaryFor(p), conclusion = conclusionFor(p);
+  const expanded = state.expanded.has(p.id);
+  let body;
+  if (analyzing) {
+    body = `<div class="card__status">${ICON.sparkle}<span>${esc(t("card.thinking"))}</span><span class="dots"><i></i><i></i><i></i></span></div>
+      <div class="skeleton skeleton__bar" style="width:92%"></div><div class="skeleton skeleton__bar" style="width:100%"></div><div class="skeleton skeleton__bar" style="width:70%"></div><div class="skeleton" style="height:52px;margin-top:4px"></div>`;
+  } else if (summary) {
+    body = `<p class="card__summary ${expanded ? "" : "is-clamped"}" data-summary>${esc(summary)}</p>${summary.length > 220 ? `<button type="button" class="card__expand" data-act="expand">${esc(expanded ? t("card.less") : t("card.more"))}</button>` : ""}
+      ${conclusion ? `<div class="card__conclusion"><span class="label">${esc(t("conclusion.label"))}</span><p>${esc(conclusion)}</p></div>` : ""}`;
+  } else if (hasOtherLangSummary(p)) {
+    body = `<p class="card__summary muted">${esc(p.summary[state.lang === "es" ? "en" : "es"])}</p>
+      <button type="button" class="btn btn--secondary btn--sm ${busy ? "is-spinning" : ""}" data-act="translate" style="align-self:flex-start" ${busy ? "disabled" : ""}>${busy ? ICON.refresh : ICON.translate}<span>${esc(busy ? t("card.translating") : t("card.translate"))}</span></button>`;
+  } else if (status === "needs_review" || status === "error") {
+    body = `<div class="card__error">${ICON.alert}<span>${esc(p.analysisError || t("error.analysis"))}</span><div class="card__error-actions">${p.analysisError !== t("error.no_text") ? `<button type="button" class="btn btn--secondary btn--sm" data-act="analyze">${ICON.sparkle}<span>${esc(t("action.retry"))}</span></button>` : ""}<button type="button" class="btn btn--ghost btn--sm" data-act="edit">${ICON.edit}<span>${esc(t("action.edit_meta"))}</span></button></div></div>`;
+  } else {
+    body = `<p class="card__summary muted">${esc(t("card.summary_missing"))}</p><div class="card__error-actions"><button type="button" class="btn btn--secondary btn--sm" data-act="analyze">${ICON.sparkle}<span>${esc(t("card.analyze"))}</span></button><button type="button" class="btn btn--ghost btn--sm" data-act="edit">${ICON.edit}<span>${esc(t("action.edit_meta"))}</span></button></div>`;
+  }
+  const cite = formatCitation(p, state.citeStyle, state.lang, listIndex);
+  const kws = p.keywords || [];
+  return `<article class="${cls}" data-id="${p.id}" aria-busy="${analyzing}">
+    <div class="card__sections">${chips}</div>
+    <div class="card__body">${thumb}<div class="card__main">
+      <h3 class="card__title" title="${esc(title)}">${esc(title)}</h3>${meta}${body}
+    </div></div>
+    <div class="card__citation"><div class="card__citation-head"><span class="label">${esc(t("citation.label", { style: t("cite." + state.citeStyle) }))}</span><button type="button" class="btn btn--icon" data-act="copy" aria-label="${esc(t("citation.copy"))}" title="${esc(t("citation.copy"))}">${ICON.copy}</button></div><div class="card__citation-text" data-cite>${cite}</div></div>
+    ${kws.length ? `<div class="card__keywords">${kws.slice(0, 6).map(k => `<span class="chip chip--kw chip--static">${esc(k)}</span>`).join("")}${kws.length > 6 ? `<span class="chip chip--kw chip--static">${esc(t("keywords.more", { n: kws.length - 6 }))}</span>` : ""}</div>` : ""}
+    <div class="card__footer"><span class="card__date">${esc(t("card.added_on", { date: fmtDate(p.createdAt) }))}</span><div class="card__actions">
+      <button type="button" class="btn btn--icon ${p.notes ? "is-on" : ""}" data-act="notes" aria-label="${esc(t("notes.button"))}${p.notes ? ", " + esc(t("a11y.has_notes")) : ""}" title="${esc(t("notes.button"))}">${ICON.notes}${p.notes ? '<span class="dot"></span>' : ""}</button>
+      <button type="button" class="btn btn--icon ${busy ? "is-spinning" : ""}" data-act="regenerate" aria-label="${esc(t("action.regenerate"))}" title="${esc(t("action.regenerate"))}" ${busy ? "disabled" : ""}>${ICON.refresh}</button>
+      <button type="button" class="btn btn--icon" data-act="edit" aria-label="${esc(t("action.edit_meta"))}" title="${esc(t("action.edit_meta"))}">${ICON.edit}</button>
+      <button type="button" class="btn btn--icon" data-act="menu" aria-label="${esc(t("action.more"))}" aria-haspopup="menu">${ICON.more}</button>
+    </div></div></article>`;
+}
+async function hydrateThumbs(root = document) {
+  for (const img of $$("img[data-thumb]", root)) {
+    const id = img.dataset.thumb; const p = state.papers.get(id); if (!p) continue;
+    const url = await thumbUrl(p);
+    if (url) { img.src = url; img.hidden = false; const ph = $(`[data-thumb-ph="${id}"]`, root); if (ph) ph.hidden = true; }
+  }
+}
+function renderStats() {
+  const stats = $("#stats"); const all = [...state.papers.values()];
+  if (!all.length) { stats.hidden = true; return; }
+  stats.hidden = false;
+  const counts = Object.fromEntries(SECTION_KEYS.map(k => [k, 0]));
+  all.forEach(p => effectiveSections(p).forEach(k => counts[k]++));
+  stats.innerHTML = `<span class="stats__total">${esc(all.length === 1 ? t("stats.total_one") : t("stats.total", { n: all.length }))}</span>` +
+    SECTION_KEYS.map(k => `<button type="button" class="chip chip--filter chip--${k}" data-filter="${k}" aria-pressed="${state.filters.has(k)}" title="${esc(t("section." + k + ".desc"))}"><span class="chip__dot"></span>${esc(sectionLabel(k))}<span class="chip__count">${counts[k]}</span></button>`).join("") +
+    (state.filters.size ? `<button type="button" class="btn btn--ghost" data-act="clearfilters">${esc(t("filter.clear"))}</button>` : "");
+}
+function renderLibrary() {
+  const lib = $("#library"); const list = visiblePapers(); const hasAny = state.papers.size > 0;
+  $("#hero").hidden = hasAny;
+  if (!hasAny) { lib.innerHTML = ""; return; }
+  if (state.view === "grid") {
+    lib.className = "library";
+    lib.innerHTML = list.length ? list.map((p, i) => cardHTML(p, { listIndex: i + 1 })).join("") : `<div class="empty-note">${esc(t("empty.filtered"))}</div>`;
+  } else {
+    lib.className = "kanban";
+    const groups = Object.fromEntries([...SECTION_KEYS, "none"].map(k => [k, []]));
+    list.forEach(p => { const eff = effectiveSections(p); if (!eff.length) groups.none.push(p); else eff.forEach(k => groups[k].push(p)); });
+    const keys = [...SECTION_KEYS, ...(groups.none.length ? ["none"] : [])];
+    lib.innerHTML = keys.map(k => `<section class="kanban__col kanban__col--${k}" aria-labelledby="col-${k}">
+      <div class="kanban__head"><span class="kanban__dot"></span><span class="kanban__name" id="col-${k}">${esc(sectionLabel(k))}</span><span class="kanban__count">${groups[k].length}</span></div>
+      <div class="kanban__desc">${esc(t("section." + k + ".desc"))}</div>
+      <div class="kanban__body">${groups[k].length ? groups[k].map(p => cardHTML(p, { compact: true, inSection: k })).join("") : `<div class="kanban__empty">${esc(t("empty.column"))}</div>`}</div></section>`).join("");
+  }
+  hydrateThumbs(lib);
+}
+function renderChrome() {
+  document.documentElement.lang = state.lang;
+  applyI18n();
+  $$("[data-view]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === state.view)));
+  $$("[data-lang]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === state.lang)));
+  const cs = $("#citeStyle"); cs.innerHTML = CITE_STYLES.map(s => `<option value="${s}">${esc(t("cite." + s))}</option>`).join(""); cs.value = state.citeStyle;
+  const so = $("#sort"); so.innerHTML = SORTS.map(s => `<option value="${s}">${esc(t("sort." + s))}</option>`).join(""); so.value = state.sort;
+  const ms = $("#modelSelect"); ms.innerHTML = MODELS.map(m => `<option value="${m.id}">${esc(m[state.lang])}</option>`).join(""); ms.value = state.settings.model;
+  $("#modelHint").textContent = t("settings.model_hint");
+  const et = $("#editType"); et.innerHTML = DOC_TYPES.map(x => `<option value="${x}">${esc(t("edit.type." + x))}</option>`).join("");
+  $("#themeSelect").value = state.theme;
+  $("#drawerPrompts").innerHTML = [1, 2, 3].map(i => `<button type="button" class="chip" data-prompt="${esc(t("notes.prompt_" + i))}">${esc(t("notes.prompt_" + i))}</button>`).join("");
+  $("#aiBanner").hidden = !!state.settings.apiKey || DEMO || state.papers.size === 0;
+  $("#settingsDot").hidden = !!state.settings.apiKey || DEMO;
+  const overdue = state.papers.size >= 3 && (Date.now() - (state.settings.lastBackupAt || 0) > 7 * 864e5) && (state.settings.papersSinceBackup || 0) >= 1;
+  $("#backupBanner").hidden = !overdue;
+  $("#themeIcon").innerHTML = state.theme === "dark" ? ICON.moon : state.theme === "light" ? ICON.sun : ICON.auto;
+  $("#apiKeyToggle").textContent = $("#apiKey").type === "password" ? t("settings.show") : t("settings.hide");
+  $("#searchClear").hidden = !state.query;
+}
+function render() { renderChrome(); renderStats(); renderLibrary(); if (state.drawerId) renderDrawerHead(); }
+function renderCard(id) {
+  const p = state.papers.get(id); if (!p) return;
+  const list = visiblePapers(); const idx = list.findIndex(x => x.id === id);
+  if (state.view !== "grid") { renderLibrary(); return; }
+  const old = $(`#library .card[data-id="${id}"]`); if (!old) { renderLibrary(); return; }
+  const tmp = document.createElement("div"); tmp.innerHTML = cardHTML(p, { listIndex: idx + 1 }); const fresh = tmp.firstElementChild;
+  old.replaceWith(fresh); hydrateThumbs(fresh);
+}
+
+/* =========================================================
+   9. UPLOAD PIPELINE
+   ========================================================= */
+function renderJobs() {
+  const panel = $("#uploadPanel"); const jobs = state.jobs;
+  if (!jobs.length) { panel.hidden = true; return; }
+  panel.hidden = false;
+  $("#uploadPanelTitle").textContent = jobs.length === 1 ? t("upload.panel_title_one") : t("upload.panel_title", { n: jobs.length });
+  $("#uploadRows").innerHTML = jobs.map(j => `<div class="upload-panel__row ${j.stage === "done" || j.stage === "duplicate" || j.stage === "no_ai" ? "is-done" : j.stage === "error" ? "is-error" : ""}">
+    ${j.stage === "done" || j.stage === "duplicate" || j.stage === "no_ai" ? ICON.ok : j.stage === "error" ? ICON.alert : '<span class="spinner"></span>'}
+    <div><div class="upload-panel__name" title="${esc(j.name)}">${esc(j.name)}</div><div class="upload-panel__stage">${esc(j.stage === "error" ? (j.error || t("upload.error")) : t("upload." + j.stage))}</div>${["done", "duplicate", "no_ai", "error"].includes(j.stage) ? "" : '<div class="upload-panel__bar"><i></i></div>'}</div>
+    <span></span></div>`).join("");
+}
+let queueRunning = false; const queue = [];
+function enqueueFiles(files) {
+  const arr = [...files].filter(f => /\.pdf$/i.test(f.name) || f.type === "application/pdf");
+  if (arr.length !== files.length) toast(t("add.only_pdf"), "error");
+  for (const f of arr) { const job = { id: uid(), name: f.name, stage: "parsing", file: f }; state.jobs.push(job); queue.push(job); }
+  renderJobs(); runQueue();
+}
+async function runQueue() {
+  if (queueRunning) return; queueRunning = true;
+  while (queue.length) { const job = queue.shift(); try { await ingest(job); } catch (e) { console.error(e); job.stage = "error"; job.error = e?.code === "no_text" ? t("error.no_text") : t("error.pdf"); renderJobs(); } }
+  queueRunning = false;
+  setTimeout(() => { if (state.jobs.every(j => ["done", "duplicate", "no_ai", "error"].includes(j.stage))) { state.jobs = state.jobs.filter(j => j.stage === "error"); renderJobs(); } }, 4000);
+}
+async function ingest(job) {
+  const file = job.file; job.stage = "parsing"; renderJobs();
+  const buf = await file.arrayBuffer();
+  const hash = await sha256(buf);
+  const dup = [...state.papers.values()].find(p => p.sha256 === hash);
+  if (dup) { job.stage = "duplicate"; renderJobs(); toast(t("upload.duplicate")); return; }
+  const pdf = await openPdf(buf);
+  const [thumb, ex, metaInfo] = await Promise.all([makeThumb(pdf), extractExcerpt(pdf), pdf.getMetadata().catch(() => null)]);
+  const info = metaInfo?.info || {};
+  const pdfMeta = { title: info.Title || "", author: info.Author || "", subject: info.Subject || "" };
+  job.stage = "saving"; renderJobs();
+  const id = uid(); const now = new Date().toISOString();
+  const p = {
+    id, createdAt: now, updatedAt: now, fileName: file.name, pageCount: pdf.numPages, sizeBytes: file.size, sha256: hash, pdfMeta, hasThumb: !!thumb,
+    paperLanguage: "other", type: "article", cite: { authors: [], year: "", title: "", container: "", volume: "", issue: "", pages: "", doi: "", url: "", publisher: "", edition: "", place: "" },
+    citeEdited: false, summary: { es: "", en: "" }, conclusion: { es: "", en: "" }, keywords: [], suggestedSections: [], userSections: null, notes: "",
+    textExcerpt: ex.excerpt, textChars: ex.chars, analysisStatus: "pending", analysisError: null, analyzedAt: null, analysisLang: null,
+  };
+  await putBlob("pdf:" + id, "pdf", file);
+  if (thumb) await putBlob("thumb:" + id, "thumb", thumb);
+  await savePaper(p);
+  state.settings.papersSinceBackup = (state.settings.papersSinceBackup || 0) + 1; saveSettings();
+  try { pdf.destroy(); } catch {}
+  render();
+  if (!state.settings.apiKey && !DEMO) { job.stage = "no_ai"; renderJobs(); return; }
+  job.stage = "analyzing"; renderJobs();
+  await analyzePaper(id);
+  const after = state.papers.get(id);
+  if (after?.analysisStatus === "ready") { job.stage = "done"; } else { job.stage = "error"; job.error = after?.analysisError || t("error.analysis"); }
+  renderJobs();
+}
+
+/* =========================================================
+   10. NOTES DRAWER, DIALOGS, READER, MENU
+   ========================================================= */
+function renderDrawerHead() { const p = state.papers.get(state.drawerId); if (p) $("#drawerTitle").textContent = paperTitle(p); }
+const saveNotes = debounce(async () => {
+  const p = state.papers.get(state.drawerId); if (!p) return;
+  p.notes = $("#drawerText").value.slice(0, 100000); await savePaper(p);
+  const st = $("#drawerStatus"); st.innerHTML = ICON.check + `<span>${esc(t("notes.saved"))}</span>`; st.classList.add("is-saved");
+  const btn = $(`.card[data-id="${p.id}"] [data-act="notes"]`); if (btn) { btn.classList.toggle("is-on", !!p.notes); const d = btn.querySelector(".dot"); if (p.notes && !d) btn.insertAdjacentHTML("beforeend", '<span class="dot"></span>'); if (!p.notes && d) d.remove(); }
+}, 600);
+function openDrawer(id) {
+  const p = state.papers.get(id); if (!p) return;
+  state.drawerId = id; renderDrawerHead();
+  const ta = $("#drawerText"); ta.value = p.notes || ""; $("#drawerCount").textContent = t("notes.chars", { n: ta.value.length });
+  $("#drawerStatus").textContent = ""; $("#drawerStatus").classList.remove("is-saved");
+  $("#drawer").classList.add("is-open"); $("#drawer").setAttribute("aria-hidden", "false"); $("#backdrop").classList.add("is-open");
+  setTimeout(() => ta.focus(), 250);
+}
+function closeDrawer() {
+  if (!state.drawerId) return;
+  saveNotes.flush(); const id = state.drawerId; state.drawerId = null;
+  $("#drawer").classList.remove("is-open"); $("#drawer").setAttribute("aria-hidden", "true"); $("#backdrop").classList.remove("is-open");
+  const btn = $(`.card[data-id="${id}"] [data-act="notes"]`); if (btn) btn.focus();
+}
+function confirmDialog(title, body, okLabel) {
+  return new Promise(res => {
+    const d = $("#confirmDialog"); $("#confirmTitle").textContent = title; $("#confirmBody").textContent = body; $("#confirmOk").textContent = okLabel;
+    const ok = () => { cleanup(); d.close(); res(true); }; const cancel = () => { cleanup(); res(false); };
+    const cleanup = () => { $("#confirmOk").removeEventListener("click", ok); d.removeEventListener("close", cancel); };
+    $("#confirmOk").addEventListener("click", ok); d.addEventListener("close", cancel); d.showModal();
+  });
+}
+async function deletePaper(id) {
+  const p = state.papers.get(id); if (!p) return;
+  const ok = await confirmDialog(t("confirm.delete_title"), t("confirm.delete_body", { title: paperTitle(p) }), t("action.delete"));
+  if (!ok) return;
+  if (state.drawerId === id) closeDrawer();
+  state.papers.delete(id); await idb.del("papers", id); await idb.del("blobs", "pdf:" + id); await idb.del("blobs", "thumb:" + id);
+  const u = state.thumbUrls.get(id); if (u) { URL.revokeObjectURL(u); state.thumbUrls.delete(id); }
+  toast(t("toast.deleted")); render();
+}
+async function downloadPdf(id) {
+  const p = state.papers.get(id); const b = await getBlob("pdf:" + id); if (!b) return;
+  const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = p.fileName || "documento.pdf"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+function downloadText(name, text, type = "text/plain") {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+async function copyCitation(id, btn) {
+  const p = state.papers.get(id); const idx = visiblePapers().findIndex(x => x.id === id);
+  const text = citationText(formatCitation(p, state.citeStyle, state.lang, idx + 1));
+  try {
+    if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(text);
+    else { const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
+    if (btn) { btn.innerHTML = ICON.check; btn.style.color = "var(--success)"; setTimeout(() => { btn.innerHTML = ICON.copy; btn.style.color = ""; }, 1200); }
+    toast(t("toast.copied"), "success", 1800);
+  } catch { toast(t("error.copy"), "error"); }
+}
+let menuEl = null;
+function closeMenu() { if (menuEl) { menuEl.remove(); menuEl = null; } }
+function openMenu(anchor, items) {
+  closeMenu();
+  const m = document.createElement("div"); m.className = "menu"; m.setAttribute("role", "menu");
+  m.innerHTML = items.map(i => i === "sep" ? '<div class="menu__sep"></div>' : i.label && !i.act ? `<div class="menu__label">${esc(i.label)}</div>` : `<button type="button" class="menu__item ${i.danger ? "menu__item--danger" : ""}" role="menuitem" data-menu="${i.act}">${i.icon || ""}<span>${esc(i.label)}</span></button>`).join("");
+  document.body.appendChild(m); menuEl = m;
+  const r = anchor.getBoundingClientRect(); const mw = m.offsetWidth, mh = m.offsetHeight;
+  let x = Math.min(r.right - mw, window.innerWidth - mw - 8), y = r.bottom + 6; if (y + mh > window.innerHeight - 8) y = r.top - mh - 6;
+  m.style.left = Math.max(8, x) + "px"; m.style.top = Math.max(8, y) + "px";
+  m.addEventListener("click", e => { const b = e.target.closest("[data-menu]"); if (!b) return; const act = b.dataset.menu; closeMenu(); const item = items.find(i => i.act === act); item?.fn?.(); });
+  setTimeout(() => document.addEventListener("click", closeMenu, { once: true }), 0);
+  m.querySelector("button")?.focus();
+}
+function openSectionPicker(anchor, id) {
+  const p = state.papers.get(id); const eff = new Set(effectiveSections(p));
+  openMenu(anchor, [{ label: t("chip.add") }, ...SECTION_KEYS.map(k => ({ act: k, label: (eff.has(k) ? "✓ " : "") + sectionLabel(k), fn: () => toggleSection(id, k) }))]);
+}
+async function toggleSection(id, key, chipEl) {
+  const p = state.papers.get(id); if (!p) return;
+  let eff = effectiveSections(p);
+  if (eff.includes(key)) { if (eff.length === 1) { if (chipEl) { chipEl.classList.add("shake"); setTimeout(() => chipEl.classList.remove("shake"), 300); } toast(t("chip.min_one")); return; } eff = eff.filter(k => k !== key); }
+  else eff = [...eff, key];
+  p.userSections = SECTION_KEYS.filter(k => eff.includes(k)); await savePaper(p); render();
+  const fresh = $(`.card[data-id="${id}"] [data-chip="${key}"]`); if (fresh) fresh.classList.add("pop");
+}
+
+/* ---- Edit metadata ---- */
+let editId = null;
+function authorRowHTML(a = { family: "", given: "" }) {
+  return `<div class="authors__row"><input class="field__input" name="family" placeholder="${esc(t("edit.surname"))}" value="${esc(a.family)}"><input class="field__input" name="given" placeholder="${esc(t("edit.given"))}" value="${esc(a.given)}">
+    <button type="button" class="btn btn--icon btn--reorder" data-move="-1" aria-label="↑"><svg class="ic sm" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></svg></button><button type="button" class="btn btn--icon btn--reorder" data-move="1" aria-label="↓"><svg class="ic sm" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+    <button type="button" class="btn btn--icon" data-remove aria-label="${esc(t("edit.remove_author"))}"><svg class="ic sm" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>`;
+}
+function readEditForm() {
+  const f = $("#editForm"); const g = n => f.elements[n]?.value?.trim() || "";
+  const authors = $$("#editAuthors .authors__row").map(r => ({ family: r.querySelector('[name=family]').value.trim(), given: r.querySelector('[name=given]').value.trim() })).filter(a => a.family || a.given);
+  return { type: $("#editType").value, cite: { authors, year: g("year"), title: g("title"), container: g("container"), volume: g("volume"), issue: g("issue"), pages: g("pages"), doi: g("doi").replace(/^https?:\/\/(dx\.)?doi\.org\//i, ""), url: g("url"), publisher: g("publisher"), edition: "", place: "" }, summary: g("summary"), conclusion: g("conclusion") };
+}
+function updateEditPreview() { const p = state.papers.get(editId); if (!p) return; const d = readEditForm(); $("#editPreview").innerHTML = formatCitation({ ...p, type: d.type, cite: d.cite }, state.citeStyle, state.lang, 1); }
+function openEdit(id) {
+  const p = state.papers.get(id); if (!p) return; editId = id;
+  const f = $("#editForm"); $("#editType").value = p.type || "article";
+  for (const k of ["title", "year", "container", "volume", "issue", "pages", "doi", "url", "publisher"]) f.elements[k].value = p.cite?.[k] || "";
+  f.elements.summary.value = summaryFor(p); f.elements.conclusion.value = conclusionFor(p);
+  $("#editAuthors").innerHTML = (p.cite?.authors?.length ? p.cite.authors : [{ family: "", given: "" }]).map(authorRowHTML).join("");
+  updateEditPreview(); $("#editDialog").showModal();
+}
+async function saveEdit() {
+  const p = state.papers.get(editId); if (!p) return; const d = readEditForm();
+  p.type = d.type; p.cite = d.cite; p.citeEdited = true;
+  p.summary = { ...(p.summary || {}), [state.lang]: d.summary }; p.conclusion = { ...(p.conclusion || {}), [state.lang]: d.conclusion };
+  if (p.analysisStatus !== "ready" && (d.summary || d.cite.title)) p.analysisStatus = "manual";
+  await savePaper(p); $("#editDialog").close(); toast(t("toast.saved_meta"), "success"); render();
+}
+
+/* ---- PDF reader ---- */
+const reader = { id: null, pdf: null, page: 1, zoom: 1, fitScale: 1, rendering: false, pending: null, cache: new Map() };
+async function openReader(id) {
+  const p = state.papers.get(id); if (!p) return;
+  const d = $("#reader"); $("#readerTitle").textContent = paperTitle(p); $("#readerLoading").hidden = false; $("#readerPage").textContent = "";
+  reader.id = id; reader.page = 1; reader.zoom = 1;
+  if (!d.open) d.showModal();
+  try {
+    let pdf = reader.cache.get(id);
+    if (!pdf) { const b = await getBlob("pdf:" + id); if (!b) throw new Error("no-pdf"); pdf = await openPdf(await b.arrayBuffer()); reader.cache.set(id, pdf); }
+    reader.pdf = pdf; await renderReaderPage(true);
+  } catch (e) { console.error(e); toast(t("error.pdf"), "error"); d.close(); }
+  finally { $("#readerLoading").hidden = true; }
+}
+async function renderReaderPage(fit = false) {
+  if (!reader.pdf) return;
+  if (reader.rendering) { reader.pending = fit; return; }
+  reader.rendering = true;
+  try {
+    const page = await reader.pdf.getPage(reader.page);
+    const stage = $("#readerStage"); const base = page.getViewport({ scale: 1 });
+    if (fit) { reader.fitScale = Math.min((stage.clientWidth - 48) / base.width, (stage.clientHeight - 48) / base.height); reader.zoom = 1; }
+    const cssScale = reader.fitScale * reader.zoom; const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    const canvas = $("#readerCanvas"); await renderPageToCanvas(page, Math.round(base.width * cssScale * dpr), canvas);
+    canvas.style.width = Math.round(base.width * cssScale) + "px"; canvas.style.height = Math.round(base.height * cssScale) + "px";
+    $("#readerPage").textContent = t("reader.page_of", { p: reader.page, n: reader.pdf.numPages }); $("#readerZoom").textContent = Math.round(reader.zoom * 100) + "%";
+  } finally { reader.rendering = false; if (reader.pending !== null) { const f = reader.pending; reader.pending = null; renderReaderPage(f); } }
+}
+function readerGo(delta) { if (!reader.pdf) return; const n = reader.page + delta; if (n < 1 || n > reader.pdf.numPages) return; reader.page = n; $("#readerStage").scrollTop = 0; renderReaderPage(); }
+
+/* ---- Paper detail (from kanban) ---- */
+function openDetail(id) {
+  const p = state.papers.get(id); if (!p) return;
+  const idx = visiblePapers().findIndex(x => x.id === id);
+  const body = $("#paperDialogBody"); body.innerHTML = cardHTML(p, { listIndex: idx + 1 }); body.firstElementChild.style.boxShadow = "none"; body.firstElementChild.style.border = "0"; body.firstElementChild.style.padding = "0 0 8px";
+  hydrateThumbs(body); $("#paperDialog").showModal();
+}
+
+/* =========================================================
+   11. BACKUP / IMPORT / BIBLIOGRAPHY
+   ========================================================= */
+const blobToDataUrl = b => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(b); });
+async function exportBackup(includePdf) {
+  const papers = [...state.papers.values()]; const blobs = [];
+  for (const p of papers) {
+    const th = await getBlob("thumb:" + p.id); if (th) blobs.push({ id: "thumb:" + p.id, kind: "thumb", data: await blobToDataUrl(th) });
+    if (includePdf) { const pdf = await getBlob("pdf:" + p.id); if (pdf) blobs.push({ id: "pdf:" + p.id, kind: "pdf", data: await blobToDataUrl(pdf) }); }
+  }
+  const payload = { app: "biblioteca-tfm", version: 1, exportedAt: new Date().toISOString(), lang: state.lang, citeStyle: state.citeStyle, papers, blobs };
+  downloadText(`biblioteca-tfm-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(payload), "application/json");
+  state.settings.lastBackupAt = Date.now(); state.settings.papersSinceBackup = 0; await saveSettings(); render(); toast(t("toast.exported"), "success");
+}
+async function importBackup(file) {
+  let data; try { data = JSON.parse(await file.text()); if (data.app !== "biblioteca-tfm" || !Array.isArray(data.papers)) throw 0; } catch { toast(t("error.import"), "error"); return; }
+  toast(t("backup.importing")); let n = 0;
+  for (const p of data.papers) {
+    const cur = state.papers.get(p.id);
+    if (cur && cur.updatedAt >= p.updatedAt) continue;
+    delete p.analysisStatusBusy; state.papers.set(p.id, p); await idb.put("papers", p); n++;
+  }
+  for (const b of data.blobs || []) {
+    const pid = b.id.split(":")[1]; if (!state.papers.has(pid)) continue;
+    const existing = await idb.get("blobs", b.id); if (existing && !data.papers.find(p => p.id === pid && (!state.papers.get(pid) || true))) {}
+    const blob = await (await fetch(b.data)).blob(); await putBlob(b.id, b.kind, blob);
+    if (b.kind === "thumb") { const u = state.thumbUrls.get(pid); if (u) { URL.revokeObjectURL(u); state.thumbUrls.delete(pid); } }
+  }
+  render(); toast(t("toast.imported", { n }), "success");
+}
+function exportBibliography() {
+  const list = visiblePapers(); if (!list.length) return;
+  const text = list.map((p, i) => citationText(formatCitation(p, state.citeStyle, state.lang, i + 1))).join("\n\n");
+  downloadText(`bibliografia-${state.citeStyle}.txt`, text); toast(t("toast.bib_exported"), "success");
+}
+async function wipeAll() {
+  const ok = await confirmDialog(t("confirm.wipe_title"), t("confirm.wipe_body"), t("action.delete")); if (!ok) return;
+  closeDrawer(); await idb.clear("papers"); await idb.clear("blobs"); state.papers.clear(); state.thumbUrls.forEach(u => URL.revokeObjectURL(u)); state.thumbUrls.clear();
+  $("#settingsDialog").close(); render();
+}
+async function updateStorageLine() {
+  try { const e = await navigator.storage.estimate(); $("#storageLine").textContent = t("settings.storage", { used: fmtBytes(e.usage || 0), quota: fmtBytes(e.quota || 0) }); } catch { $("#storageLine").textContent = ""; }
+}
+
+/* =========================================================
+   12. EVENTS
+   ========================================================= */
+function applyTheme() { const h = document.documentElement; if (state.theme === "system") h.removeAttribute("data-theme"); else h.setAttribute("data-theme", state.theme); ls.set("tfm.theme", state.theme); }
+function setLang(l) { state.lang = l; ls.set("tfm.lang", l); render(); }
+function bindEvents() {
+  $("#brand").addEventListener("click", e => { e.preventDefault(); state.query = ""; state.filters.clear(); $("#search").value = ""; $("#searchMobile").value = ""; render(); });
+  $$("[data-view]").forEach(b => b.addEventListener("click", () => { state.view = b.dataset.view; ls.set("tfm.view", state.view); render(); }));
+  $$("[data-lang]").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+  $("#citeStyle").addEventListener("change", e => { state.citeStyle = e.target.value; ls.set("tfm.citeStyle", state.citeStyle); render(); });
+  $("#sort").addEventListener("change", e => { state.sort = e.target.value; ls.set("tfm.sort", state.sort); render(); });
+  const onSearch = debounce(v => { state.query = v; renderStats(); renderLibrary(); $("#searchClear").hidden = !v; }, 150);
+  $("#search").addEventListener("input", e => { $("#searchMobile").value = e.target.value; onSearch(e.target.value); });
+  $("#searchMobile").addEventListener("input", e => { $("#search").value = e.target.value; onSearch(e.target.value); });
+  $("#searchClear").addEventListener("click", () => { $("#search").value = ""; $("#searchMobile").value = ""; onSearch.flush(""); $("#search").focus(); });
+  $("#themeBtn").addEventListener("click", () => { state.theme = state.theme === "system" ? "dark" : state.theme === "dark" ? "light" : "system"; applyTheme(); renderChrome(); });
+  $("#themeSelect").addEventListener("change", e => { state.theme = e.target.value; applyTheme(); renderChrome(); });
+  $("#settingsBtn").addEventListener("click", openSettings); $("#aiBannerBtn").addEventListener("click", openSettings);
+  $("#backupBannerBtn").addEventListener("click", () => exportBackup(true));
+  $("#moreBtn").addEventListener("click", e => openMenu(e.currentTarget, [
+    { label: t("view.label") }, ...["grid", "sections"].map(v => ({ act: "view:" + v, label: (state.view === v ? "✓ " : "") + t("view." + v), fn: () => { state.view = v; ls.set("tfm.view", v); render(); } })), "sep",
+    { label: t("cite.label") }, ...CITE_STYLES.map(s => ({ act: "cite:" + s, label: (state.citeStyle === s ? "✓ " : "") + t("cite." + s), fn: () => { state.citeStyle = s; ls.set("tfm.citeStyle", s); render(); } })), "sep",
+    { label: t("sort.label") }, ...SORTS.map(s => ({ act: "sort:" + s, label: (state.sort === s ? "✓ " : "") + t("sort." + s), fn: () => { state.sort = s; ls.set("tfm.sort", s); render(); } })), "sep",
+    { act: "theme", label: t("theme.toggle"), fn: () => { state.theme = state.theme === "system" ? "dark" : state.theme === "dark" ? "light" : "system"; applyTheme(); renderChrome(); } },
+    { act: "settings", label: t("settings.title"), fn: openSettings },
+  ]));
+  // Upload
+  const pick = () => { $("#fileInput").value = ""; $("#fileInput").click(); };
+  $("#addBtn").addEventListener("click", pick); $("#heroAddBtn").addEventListener("click", pick);
+  $("#fileInput").addEventListener("change", e => { if (e.target.files?.length) enqueueFiles(e.target.files); });
+  let dragDepth = 0;
+  document.addEventListener("dragenter", e => { if (e.dataTransfer?.types?.includes("Files")) { dragDepth++; document.body.classList.add("is-dragging"); $("#dropzone").classList.add("is-active"); $("#dropzoneCompact").classList.add("is-active"); } });
+  document.addEventListener("dragleave", () => { if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove("is-dragging"); $("#dropzone").classList.remove("is-active"); $("#dropzoneCompact").classList.remove("is-active"); } });
+  document.addEventListener("dragover", e => { e.preventDefault(); });
+  document.addEventListener("drop", e => { e.preventDefault(); dragDepth = 0; document.body.classList.remove("is-dragging"); $("#dropzone").classList.remove("is-active"); $("#dropzoneCompact").classList.remove("is-active"); if (e.dataTransfer?.files?.length) enqueueFiles(e.dataTransfer.files); });
+  $("#uploadPanelClose").addEventListener("click", () => { state.jobs = state.jobs.filter(j => !["done", "duplicate", "no_ai", "error"].includes(j.stage)); renderJobs(); });
+  // Stats filters
+  $("#stats").addEventListener("click", e => {
+    const f = e.target.closest("[data-filter]"); if (f) { const k = f.dataset.filter; state.filters.has(k) ? state.filters.delete(k) : state.filters.add(k); render(); return; }
+    if (e.target.closest("[data-act=clearfilters]")) { state.filters.clear(); render(); }
+  });
+  // Card actions (delegated; also inside detail dialog)
+  const onCardClick = e => {
+    const chip = e.target.closest("[data-chip]"); const card = e.target.closest(".card"); if (!card) return; const id = card.dataset.id;
+    if (chip) { toggleSection(id, chip.dataset.chip, chip); return; }
+    const btn = e.target.closest("[data-act]"); if (!btn) return; const act = btn.dataset.act;
+    switch (act) {
+      case "open": openReader(id); break;
+      case "detail": if (!$("#paperDialog").open) openDetail(id); break;
+      case "notes": openDrawer(id); break;
+      case "copy": copyCitation(id, btn); break;
+      case "expand": state.expanded.has(id) ? state.expanded.delete(id) : state.expanded.add(id); renderCard(id); if ($("#paperDialog").open) openDetail(id); break;
+      case "edit": openEdit(id); break;
+      case "analyze": analyzePaper(id); break;
+      case "regenerate": analyzePaper(id, { regenerate: true }); break;
+      case "translate": translatePaper(id); break;
+      case "addsection": openSectionPicker(btn, id); break;
+      case "resetsections": { const p = state.papers.get(id); p.userSections = null; savePaper(p).then(render); break; }
+      case "menu": openMenu(btn, [
+        { act: "open", label: t("card.open_pdf"), icon: ICON.open, fn: () => openReader(id) },
+        { act: "download", label: t("action.download"), icon: ICON.download, fn: () => downloadPdf(id) },
+        { act: "edit", label: t("action.edit_meta"), icon: ICON.edit, fn: () => openEdit(id) }, "sep",
+        { act: "delete", label: t("action.delete"), icon: ICON.trash, danger: true, fn: () => deletePaper(id) }]); break;
+    }
+  };
+  $("#library").addEventListener("click", onCardClick); $("#paperDialogBody").addEventListener("click", onCardClick);
+  $("#library").addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches(".card__title[data-act=detail]")) openDetail(e.target.closest(".card").dataset.id); });
+  // Drawer
+  $("#drawerClose").addEventListener("click", closeDrawer); $("#backdrop").addEventListener("click", closeDrawer);
+  $("#drawerText").addEventListener("input", e => { $("#drawerCount").textContent = t("notes.chars", { n: e.target.value.length }); const st = $("#drawerStatus"); st.classList.remove("is-saved"); st.textContent = t("notes.saving"); saveNotes(); });
+  $("#drawerText").addEventListener("blur", () => saveNotes.flush());
+  $("#drawerPrompts").addEventListener("click", e => { const b = e.target.closest("[data-prompt]"); if (!b) return; const ta = $("#drawerText"); const add = (ta.value && !ta.value.endsWith("\n") ? "\n\n" : ta.value ? "\n" : "") + b.dataset.prompt + "\n"; ta.value += add; ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); ta.dispatchEvent(new Event("input")); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) saveNotes.flush(); });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") { if (state.drawerId) closeDrawer(); closeMenu(); }
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); (window.innerWidth <= 640 ? $("#searchMobile") : $("#search")).focus(); }
+    if ($("#reader").open) { if (e.key === "ArrowRight") readerGo(1); if (e.key === "ArrowLeft") readerGo(-1); }
+  });
+  // Dialog close buttons
+  $$("dialog [data-close]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
+  $$("dialog.dialog").forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close(); }));
+  // Edit dialog
+  $("#editForm").addEventListener("submit", e => { e.preventDefault(); saveEdit(); });
+  $("#editForm").addEventListener("input", updateEditPreview);
+  $("#editAddAuthor").addEventListener("click", () => { $("#editAuthors").insertAdjacentHTML("beforeend", authorRowHTML()); $("#editAuthors").lastElementChild.querySelector("input").focus(); });
+  $("#editAuthors").addEventListener("click", e => {
+    const row = e.target.closest(".authors__row"); if (!row) return;
+    if (e.target.closest("[data-remove]")) { row.remove(); if (!$("#editAuthors").children.length) $("#editAuthors").innerHTML = authorRowHTML(); updateEditPreview(); }
+    const mv = e.target.closest("[data-move]"); if (mv) { const d = +mv.dataset.move; const sib = d < 0 ? row.previousElementSibling : row.nextElementSibling; if (sib) { d < 0 ? sib.before(row) : sib.after(row); updateEditPreview(); } }
+  });
+  // Reader
+  $("#readerClose").addEventListener("click", () => $("#reader").close());
+  $("#readerPrev").addEventListener("click", () => readerGo(-1)); $("#readerNext").addEventListener("click", () => readerGo(1));
+  $("#readerZoomIn").addEventListener("click", () => { reader.zoom = Math.min(4, reader.zoom * 1.25); renderReaderPage(); });
+  $("#readerZoomOut").addEventListener("click", () => { reader.zoom = Math.max(0.4, reader.zoom / 1.25); renderReaderPage(); });
+  $("#readerFit").addEventListener("click", () => renderReaderPage(true));
+  $("#readerDownload").addEventListener("click", () => reader.id && downloadPdf(reader.id));
+  let tx = null; $("#readerStage").addEventListener("touchstart", e => { tx = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+  $("#readerStage").addEventListener("touchend", e => { if (tx == null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 70 && reader.zoom <= 1.01) readerGo(dx < 0 ? 1 : -1); tx = null; }, { passive: true });
+  window.addEventListener("resize", debounce(() => { if ($("#reader").open) renderReaderPage(true); }, 200));
+  // Settings
+  $("#apiKeyToggle").addEventListener("click", () => { const i = $("#apiKey"); i.type = i.type === "password" ? "text" : "password"; renderChrome(); });
+  $("#apiKey").addEventListener("change", async () => { state.settings.apiKey = $("#apiKey").value.trim(); await saveSettings(); sdkPromise = sdkPromise; renderChrome(); if (state.settings.apiKey) toast(t("toast.key_saved"), "success"); });
+  $("#apiKeyTest").addEventListener("click", async () => {
+    state.settings.apiKey = $("#apiKey").value.trim(); await saveSettings(); renderChrome();
+    const st = $("#apiKeyStatus"); st.className = "status-line"; st.textContent = t("settings.testing"); $("#apiKeyTest").disabled = true;
+    try { await testConnection(); st.className = "status-line ok"; st.innerHTML = ICON.check + `<span>${esc(t("settings.test_ok"))}</span>`; }
+    catch (e) { console.error(e); st.className = "status-line err"; st.textContent = mapApiError(e); }
+    finally { $("#apiKeyTest").disabled = false; }
+  });
+  $("#modelSelect").addEventListener("change", async e => { state.settings.model = e.target.value; await saveSettings(); });
+  $("#backupExport").addEventListener("click", () => exportBackup($("#backupIncludePdf").checked));
+  $("#backupImport").addEventListener("click", () => { $("#importInput").value = ""; $("#importInput").click(); });
+  $("#importInput").addEventListener("change", e => { if (e.target.files?.[0]) importBackup(e.target.files[0]); });
+  $("#bibExport").addEventListener("click", exportBibliography);
+  $("#wipeBtn").addEventListener("click", wipeAll);
+}
+function openSettings() { $("#apiKey").value = state.settings.apiKey || ""; $("#apiKeyStatus").textContent = ""; $("#apiKeyStatus").className = "status-line"; renderChrome(); updateStorageLine(); $("#settingsDialog").showModal(); }
+
+/* =========================================================
+   13. BOOT
+   ========================================================= */
+(async function boot() {
+  applyTheme();
+  try { await loadAll(); } catch (e) { console.error("IndexedDB unavailable", e); }
+  if (!MODELS.some(m => m.id === state.settings.model)) state.settings.model = MODELS[0].id;
+  bindEvents(); render();
+  if (DEMO) { toast(t("demo.banner"), "info", 5000); window.__tfm = { state, enqueueFiles, analyzePaper, formatCitation, render, visiblePapers }; }
+  for (const p of state.papers.values()) if (p.analysisStatus === "analyzing") { p.analysisStatus = "needs_review"; p.analysisError = t("error.analysis"); await savePaper(p); }
+  try { if (navigator.storage?.persist) navigator.storage.persist(); } catch {}
+})();
+</script>
+</body>
+</html>
